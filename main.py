@@ -38,7 +38,7 @@ def main():
         )
         embed.add_field(
             name="Details:",
-            value=f"**Stars:** {':star: ' * fish.stars}\n**Mutation:** {fish.mutation}\n**Dead:** {fish.dead}",
+            value=f"**Stars:** {':star: ' * fish.stars}\n**Rarity:** {fish.rarity}\n**Mutation:** {fish.mutation}\n**Dead:** {fish.dead}",
         )
         embed.add_field(
             name="Production:",

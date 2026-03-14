@@ -13,6 +13,11 @@ class Fish:
         self.name = name.capitalize()
         self.weight = weight
         self.stars = stars
+
+        with open("data/prices.json") as f:
+            prices = json.load(f)
+
+        self.rarity = prices["fishes"][self.name]["rarity"]
         self.mutation = mutation.capitalize()
         self.dead = dead
 
