@@ -1,0 +1,196 @@
+{
+  "fishes": {
+    "Blue tang": {
+      "price": 14,
+      "rarity": "Common"
+    },
+    "Clownfish": {
+      "price": 12,
+      "rarity": "Common"
+    },
+    "Tang": {
+      "price": 12,
+      "rarity": "Common"
+    },
+    "Pufferfish": {
+      "price": 13,
+      "rarity": "Uncommon"
+    },
+    "Inflated pufferfish": {
+      "price": 26,
+      "rarity": "Uncommon"
+    },
+    "Salmon": {
+      "price": 9,
+      "rarity": "Uncommon"
+    },
+    "Lion fish": {
+      "price": 20,
+      "rarity": "Rare"
+    },
+    "Mahi mahi": {
+      "price": 8,
+      "rarity": "Rare"
+    },
+    "Barracuda": {
+      "price": 20,
+      "rarity": "Epic"
+    },
+    "Pompano": {
+      "price": 14,
+      "rarity": "Common"
+    },
+    "Cod": {
+      "price": 18,
+      "rarity": "Uncommon"
+    },
+    "Blackfin tuna": {
+      "price": 16,
+      "rarity": "Uncommon"
+    },
+    "Grouper": {
+      "price": 28,
+      "rarity": "Rare"
+    },
+    "Scorpionfish": {
+      "price": 60,
+      "rarity": "Rare"
+    },
+    "Cavefish": {
+      "price": 22,
+      "rarity": "Epic"
+    },
+    "Shark": {
+      "price": 40,
+      "rarity": "Epic"
+    },
+    "Bigmouth fish": {
+      "price": 76,
+      "rarity": "Legendary"
+    },
+    "Ancient shark": {
+      "price": 50,
+      "rarity": "Legendary"
+    },
+    "Pacific fanfish": {
+      "price": 20,
+      "rarity": "Common"
+    },
+    "Jellyfish": {
+      "price": 35,
+      "rarity": "Uncommon"
+    },
+    "Napoleon": {
+      "price": 20,
+      "rarity": "Uncommon"
+    },
+    "Sunfish": {
+      "price": 17,
+      "rarity": "Rare"
+    },
+    "Narwhal": {
+      "price": 18,
+      "rarity": "Rare"
+    },
+    "Sailfish": {
+      "price": 40,
+      "rarity": "Epic"
+    },
+    "Hammer shark": {
+      "price": 48,
+      "rarity": "Epic"
+    },
+    "Eyefish": {
+      "price": 160,
+      "rarity": "Legendary"
+    },
+    "Whale meat": {
+      "price": 40,
+      "rarity": "Legendary"
+    },
+    "Whale head": {
+      "price": 80,
+      "rarity": "Legendary"
+    },
+    "Dragonfish meat": {
+      "price": 70,
+      "rarity": "Mythical"
+    },
+    "Dragonfish head": {
+      "price": 140,
+      "rarity": "Mythical"
+    },
+    "Piranha": {
+      "price": 44,
+      "rarity": "Rare"
+    },
+    "Sea Horse": {
+      "price": 250,
+      "rarity": "Rare"
+    },
+    "Blobfish": {
+      "price": 75,
+      "rarity": "Rare"
+    },
+    "Bluefin tuna": {
+      "price": 36,
+      "rarity": "Legendary"
+    },
+    "Angler fish": {
+      "price": 35,
+      "rarity": "Rare"
+    },
+    "King angler fish meat": {
+      "price": 45,
+      "rarity": "Mythical"
+    },
+    "King angler fish head": {
+      "price": 90,
+      "rarity": "Mythical"
+    },
+    "Discuss": {
+      "price": 25,
+      "rarity": "Common"
+    },
+    "Tambaqui": {
+      "price": 18,
+      "rarity": "Uncommon"
+    },
+    "Trout": {
+      "price": 24,
+      "rarity": "Uncommon"
+    },
+    "Sea turtle": {
+      "price": 20,
+      "rarity": "Rare"
+    },
+    "Jaguar shark": {
+      "price": 50,
+      "rarity": "Epic"
+    },
+    "Toucan fish": {
+      "price": 90,
+      "rarity": "Epic"
+    },
+    "Sacabambaspis": {
+      "price": 150,
+      "rarity": "Legendary"
+    },
+    "Mosasaurus meat": {
+      "price": 45,
+      "rarity": "Legendary"
+    },
+    "Mosasaurus head": {
+      "price": 90,
+      "rarity": "Legendary"
+    },
+    "Pelicaan eel meat": {
+      "price": 75,
+      "rarity": "Mythical"
+    },
+    "Pelicaan eel head": {
+      "price": 150,
+      "rarity": "Mythical"
+    }
+  }
+}
