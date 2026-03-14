@@ -34,19 +34,19 @@ class Fish:
             * (mutations[self.mutation] if self.mutation != "" else 1.0)
         )
 
-    def production(self, roe_speed_level: int = 0):
+    def production(self, rsl: int = 0):
         cycle_time = {"Common": 1, "Uncommon": 2, "Rare": 4, "Epic": 7, "Legendary": 10}
 
         with open("data/prices.json") as f:
             fishes = json.load(f)
 
-        if "meat" not in self.name or "head" not in self.name:
+        if "meat" not in self.name and "head" not in self.name:
             price = self.price() * (0.01 if self.mutation != "" else 0.02)
             pr_hour = (
                 price
                 / (
                     cycle_time[fishes["fishes"][self.name]["rarity"]]
-                    * (1.0 - (0.05 * roe_speed_level))
+                    * (1.0 - (0.05 * rsl))
                 )
             ) * 60
 
@@ -56,7 +56,7 @@ class Fish:
                 weight
                 / (
                     cycle_time[fishes["fishes"][self.name]["rarity"]]
-                    * (1.0 - (0.05 * roe_speed_level))
+                    * (1.0 - (0.05 * rsl))
                 )
             ) * 60
 
