@@ -18,6 +18,7 @@ class Fish:
             prices = json.load(f)
 
         self.rarity = prices["fishes"][self.name]["rarity"]
+        self.thumbnail = prices["fishes"][self.name]["thumbnail"]
         self.mutation = mutation.capitalize()
         self.dead = dead
 
@@ -45,6 +46,9 @@ class Fish:
         with open("data/prices.json") as f:
             fishes = json.load(f)
 
+        with open("data/mutations.json") as f:
+            mutations = json.load(f)
+
         if "meat" not in self.name and "head" not in self.name:
             price = self.price() * (0.01 if self.mutation != "" else 0.02)
             pr_hour = (
@@ -65,6 +69,49 @@ class Fish:
                 )
             ) * 60
 
+            from quickchart import QuickChart
+
+            qc = QuickChart()
+            qc.width = 500
+            qc.height = 300
+            qc.version = "3"
+
+            # Config can be set as a string or as a nested dict
+            qc.config = {
+                "type": "radar",
+                "data": {
+                    "labels": [
+                        "$/hr",
+                        "PriceRoe(pts)",
+                        "Kg/hr(pts)",
+                        "Mutation(pts)",
+                    ],
+                    "datasets": [
+                        {
+                            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+                            "borderColor": "rgb(54, 162, 235)",
+                            "data": [
+                                pr_hour,
+                                price * 50,
+                                we_hour * 50,
+                                (mutations[self.mutation] * 250)
+                                if self.mutation != ""
+                                else 50,
+                            ],
+                            "label": "Stats",
+                        },
+                    ],
+                },
+                "options": {
+                    "spanGaps": False,
+                    "elements": {
+                        "line": {
+                            "tension": 0.000001,
+                        },
+                    },
+                },
+            }
+
             return {
                 "price_roe": round(price, 0),
                 "roe_per_hour": round(pr_hour, 0),
@@ -72,4 +119,5 @@ class Fish:
                 "weight_roe": round(weight, 2),
                 "weight_per_hour": round(we_hour, 2),
                 "weight_per_day": round(we_hour * 24, 2),
+                "chart": qc.get_url(),
             }
