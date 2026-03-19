@@ -1,6 +1,66 @@
 import json
 
 
+def Mph(mph):
+    if mph >= 4000:
+        return (5, "S")
+    if mph >= 3200:
+        return (4, "A")
+    if mph >= 2400:
+        return (3, "B")
+    if mph >= 1600:
+        return (2, "C")
+    if mph >= 800:
+        return (1, "D")
+    if mph >= 0:
+        return (0, "E")
+
+
+def PriceRoe(pr):
+    if pr >= 400:
+        return (5, "S")
+    if pr >= 320:
+        return (4, "A")
+    if pr >= 240:
+        return (3, "B")
+    if pr >= 160:
+        return (2, "C")
+    if pr >= 80:
+        return (1, "D")
+    if pr >= 0:
+        return (0, "E")
+
+
+def KgRoe(kr):
+    if kr >= 40:
+        return (0, "E")
+    if kr >= 32:
+        return (1, "D")
+    if kr >= 24:
+        return (2, "C")
+    if kr >= 16:
+        return (3, "B")
+    if kr >= 8:
+        return (4, "A")
+    if kr >= 0:
+        return (5, "S")
+
+
+def Mut(pr):
+    if pr >= 8.5:
+        return (5, "S")
+    if pr >= 6.8:
+        return (4, "A")
+    if pr >= 5.1:
+        return (3, "B")
+    if pr >= 3.4:
+        return (2, "C")
+    if pr >= 1.7:
+        return (1, "D")
+    if pr >= 0:
+        return (0, "E")
+
+
 class Fish:
     def __init__(
         self,
@@ -81,22 +141,24 @@ class Fish:
                 "type": "radar",
                 "data": {
                     "labels": [
-                        "$/hr",
-                        "PriceRoe(pts)",
-                        "Kg/hr(pts)",
-                        "Mutation(pts)",
+                        f"$/hr | Rank: {Mph(pr_hour)[1]}",
+                        f"PriceRoe\nRank: {PriceRoe(price)[1]}",
+                        f"Kg/hr | Rank: {KgRoe(we_hour)[1]}",
+                        f"Mutation\nRank: {Mut((mutations[self.mutation]) if self.mutation != '' else 0)[1]}",
                     ],
                     "datasets": [
                         {
                             "backgroundColor": "rgba(54, 162, 235, 0.5)",
                             "borderColor": "rgb(54, 162, 235)",
                             "data": [
-                                pr_hour,
-                                price * 50,
-                                we_hour * 50,
-                                (mutations[self.mutation] * 250)
-                                if self.mutation != ""
-                                else 50,
+                                Mph(pr_hour)[0],
+                                PriceRoe(price)[0],
+                                KgRoe(int(round(we_hour, 0)))[0],
+                                Mut(
+                                    (mutations[self.mutation])
+                                    if self.mutation != ""
+                                    else 0
+                                )[0],
                             ],
                             "label": "Stats",
                         },
@@ -109,11 +171,23 @@ class Fish:
                             "tension": 0.000001,
                         },
                     },
+                    "scales": {
+                        "r": {
+                            "min": 0,  # Valor mínimo
+                            "max": 5,  # Valor máximo fijo
+                            "ticks": {
+                                "display": False  # Oculta los números del eje
+                            },
+                            "grid": {"circular": True},
+                        }
+                    },
                 },
             }
 
             return {
                 "price_roe": round(price, 0),
+                "cycle_time": cycle_time[fishes["fishes"][self.name]["rarity"]],
+                "mutation": (mutations[self.mutation]) if self.mutation != "" else 1.0,
                 "roe_per_hour": round(pr_hour, 0),
                 "roe_per_day": round(pr_hour * 24, 0),
                 "weight_roe": round(weight, 2),

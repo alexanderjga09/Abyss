@@ -239,6 +239,96 @@
       "price": 150,
       "rarity": "Mythical",
       "thumbnail": ""
+    },
+    "Boxfish": {
+      "price": 32,
+      "rarity": "Common",
+      "thumbnail": ""
+    },
+    "Stingray": {
+      "price": 35,
+      "rarity": "Common",
+      "thumbnail": ""
+    },
+    "Catfish": {
+      "price": 32,
+      "rarity": "Uncommon",
+      "thumbnail": ""
+    },
+    "Squid": {
+      "price": 65,
+      "rarity": "Uncommon",
+      "thumbnail": ""
+    },
+    "Atlantic optopus": {
+      "price": 60,
+      "rarity": "Uncommon",
+      "thumbnail": ""
+    },
+    "Largemouth bass": {
+      "price": 65,
+      "rarity": "Rare",
+      "thumbnail": ""
+    },
+    "Sockeye salmon": {
+      "price": 75,
+      "rarity": "Rare",
+      "thumbnail": ""
+    },
+    "Surubim": {
+      "price": 68,
+      "rarity": "Rare",
+      "thumbnail": ""
+    },
+    "Manta ray": {
+      "price": 48,
+      "rarity": "Epic",
+      "thumbnail": ""
+    },
+    "Thresher shark": {
+      "price": 82,
+      "rarity": "Epic",
+      "thumbnail": ""
+    },
+    "Alien": {
+      "price": 140,
+      "rarity": "Epic",
+      "thumbnail": ""
+    },
+    "Basking shark": {
+      "price": 85,
+      "rarity": "Epic",
+      "thumbnail": ""
+    },
+    "Phamtom jelly": {
+      "price": 145,
+      "rarity": "Epic",
+      "thumbnail": ""
+    },
+    "Orca meat": {
+      "price": 63,
+      "rarity": "Legendary",
+      "thumbnail": ""
+    },
+    "Orca head": {
+      "price": 126,
+      "rarity": "Legendary",
+      "thumbnail": ""
+    },
+    "Sea angel meat": {
+      "price": 75,
+      "rarity": "Legendary",
+      "thumbnail": ""
+    },
+    "Sea angel head": {
+      "price": 150,
+      "rarity": "Legendary",
+      "thumbnail": ""
+    },
+    "Angel": {
+      "price": 300,
+      "rarity": "Mythical",
+      "thumbnail": ""
     }
   }
 }

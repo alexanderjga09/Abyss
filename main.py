@@ -44,7 +44,7 @@ def main():
         )
         embed.add_field(
             name="Details:",
-            value=f"**Stars:** {((':star: ' * fish.stars) + f'`x{0.25 + (0.25 * fish.stars)}`') if not fish.dead else ':skull: `x0.2`'} | **Rarity:** {fish.rarity}\n**Mutation:** {fish.mutation}",
+            value=f"**Stars:** {((':star: ' * fish.stars) + f'`x{0.25 + (0.25 * fish.stars)}`') if not fish.dead else ':skull: `x0.2`'} | **Rarity:** {fish.rarity} `{fish.production()['cycle_time']}m`\n**Mutation:** {fish.mutation} `x{fish.production()['mutation']}`",
         )
         embed.set_thumbnail(url=fish.thumbnail)
 
@@ -76,7 +76,7 @@ def main():
         )
         embed.add_field(
             name="Details:",
-            value=f"**Stars:** {((':star: ' * fish.stars) + f'`x{0.25 + (0.25 * fish.stars)}`') if not fish.dead else ':skull: `x0.2`'} | **Rarity:** {fish.rarity}\n**Mutation:** {fish.mutation}",
+            value=f"**Stars:** {((':star: ' * fish.stars) + f'`x{0.25 + (0.25 * fish.stars)}`') if not fish.dead else ':skull: `x0.2`'} | **Rarity:** {fish.rarity} `{fish.production(rsl=rsl)['cycle_time']}m`\n**Mutation:** {fish.mutation} `x{fish.production(rsl=rsl)['mutation']}`",
         )
 
         embed.set_thumbnail(url=fish.thumbnail)

@@ -8,4 +8,7 @@
   "reportGeneralTypeIssues": "none",
   "reportOptionalMemberAccess": "none",
   "reportOptionalSubscript": "none",
+  "reportArgumentType": "none",
+  "reportCallIssue": "none",
+  "reportOperatorIssue": "none",
 }
