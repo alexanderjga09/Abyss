@@ -5,7 +5,8 @@ import roman
 from discord.ext import commands
 from dotenv import load_dotenv
 
-import fish as fs
+import modules.fish as fs
+import modules.fishimg as fsi
 
 load_dotenv()
 
@@ -91,7 +92,7 @@ def main():
         await interaction.response.defer()
 
         img_bytes = await img.read()
-        fish_instance = fs.FishImage(img_bytes, rsl)
+        fish_instance = fsi.FishImage(img_bytes, rsl)
         resultado = fish_instance.get_fish()
 
         fish = fs.Fish(
