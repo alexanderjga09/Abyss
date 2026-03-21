@@ -16,8 +16,12 @@ def extract(txt: str):
         "weight": "None",
     }
 
-    for x in mutations.keys():
+    for x, y in mutations.items():
         if re.search(x, txt) is not None:
+            data["mutation"] = x
+            break
+
+        if re.search(("x" + str(y)), txt) is not None and data["mutation"] == "None":
             data["mutation"] = x
             break
 
@@ -26,7 +30,15 @@ def extract(txt: str):
             data["name"] = x
             break
 
-    estrellas = {"(x1)": 3, "(x075)": 2, "(x05)": 1, "(x02)": True}
+    estrellas = {
+        "(x1)": 3,
+        "(x075)": 2,
+        "(x0.75)": 2,
+        "(x05)": 1,
+        "(x0.5)": 1,
+        "(x02)": True,
+        "(x0.2)": True,
+    }
 
     for x in estrellas.keys():
         if re.search(x, txt) is not None:
