@@ -1,6 +1,6 @@
 {
   "fishes": {
-    "Blue tang": {
+    "Blue Tang": {
       "price": 14,
       "rarity": "Common",
       "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/5/58/Blue_Tang.png/400px-Blue_Tang.png"
@@ -20,7 +20,7 @@
       "rarity": "Uncommon",
       "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/b/ba/Pufferfish.png/250px-Pufferfish.png"
     },
-    "Inflated pufferfish": {
+    "Inflated Pufferfish": {
       "price": 26,
       "rarity": "Uncommon",
       "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/8/83/Inflatedpufferfish.png/400px-Inflatedpufferfish.png"
@@ -30,12 +30,12 @@
       "rarity": "Uncommon",
       "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/e/e0/Salmon.png/250px-Salmon.png"
     },
-    "Lion fish": {
+    "Lion Fish": {
       "price": 20,
       "rarity": "Rare",
       "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/b/bb/Lionfish.png/250px-Lionfish.png"
     },
-    "Mahi mahi": {
+    "Mahi Mahi": {
       "price": 8,
       "rarity": "Rare",
       "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/c/ce/MahiMahi.png/250px-MahiMahi.png"
@@ -55,7 +55,7 @@
       "rarity": "Uncommon",
       "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/4/41/Cod.png/250px-Cod.png"
     },
-    "Blackfin tuna": {
+    "Blackfin Tuna": {
       "price": 16,
       "rarity": "Uncommon",
       "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/f/f2/Blackfintuna.png/250px-Blackfintuna.png"
@@ -75,22 +75,17 @@
       "rarity": "Epic",
       "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/b/b3/Cavefish.png/250px-Cavefish.png"
     },
-    "Shark": {
-      "price": 40,
-      "rarity": "Epic",
-      "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/1/14/Shark.png/250px-Shark.png"
-    },
-    "Bigmouth fish": {
+    "Bigmouth Fish": {
       "price": 76,
       "rarity": "Legendary",
       "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/6/6c/BigmouthFish.png/250px-BigmouthFish.png"
     },
-    "Ancient shark": {
+    "Ancient Shark": {
       "price": 50,
       "rarity": "Legendary",
       "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/6/63/AncientShark.png/250px-AncientShark.png"
     },
-    "Pacific fanfish": {
+    "Pacific Fanfish": {
       "price": 20,
       "rarity": "Common",
       "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/a/a6/Pacificfanfish.png/250px-Pacificfanfish.png"
@@ -120,7 +115,7 @@
       "rarity": "Epic",
       "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/5/56/Sailfish.png/250px-Sailfish.png"
     },
-    "Hammer shark": {
+    "Hammer Shark": {
       "price": 48,
       "rarity": "Epic",
       "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/6/6c/HammerheadShark.png/250px-HammerheadShark.png"
@@ -130,25 +125,25 @@
       "rarity": "Legendary",
       "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/8/83/Eyefish.png/250px-Eyefish.png"
     },
-    "Whale meat": {
+    "Whale Meat": {
       "price": 40,
       "rarity": "Legendary",
-      "thumbnail": ""
+      "thumbnail": "https://static.wikitide.net/deepspiritwiki/c/cf/WhaleMeat.png"
     },
-    "Whale head": {
+    "Whale Head": {
       "price": 80,
       "rarity": "Legendary",
-      "thumbnail": ""
+      "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/8/8b/WhaleHead.png/400px-WhaleHead.png"
     },
-    "Dragonfish meat": {
+    "Dragonfish Meat": {
       "price": 70,
       "rarity": "Mythical",
-      "thumbnail": ""
+      "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/0/05/DragonfishMeat.png/400px-DragonfishMeat.png"
     },
-    "Dragonfish head": {
+    "Dragonfish Head": {
       "price": 140,
       "rarity": "Mythical",
-      "thumbnail": ""
+      "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/5/5d/DragonfishHead.png/400px-DragonfishHead.png"
     },
     "Piranha": {
       "price": 44,
@@ -165,27 +160,27 @@
       "rarity": "Rare",
       "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/f/f8/BlobfishReal.png/250px-BlobfishReal.png"
     },
-    "Bluefin tuna": {
+    "Bluefin Tuna": {
       "price": 36,
       "rarity": "Legendary",
       "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/4/42/BluefinTuna.png/250px-BluefinTuna.png"
     },
-    "Angler fish": {
+    "Angler Fish": {
       "price": 35,
       "rarity": "Rare",
       "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/6/64/Anglerfish.png/250px-Anglerfish.png"
     },
-    "King angler fish meat": {
+    "King Angler Fish Meat": {
       "price": 45,
       "rarity": "Mythical",
-      "thumbnail": ""
+      "thumbnail": "https://static.wikitide.net/deepspiritwiki/2/24/KingAnglerfishMeat.png"
     },
-    "King angler fish head": {
+    "King Angler Fish Head": {
       "price": 90,
       "rarity": "Mythical",
-      "thumbnail": ""
+      "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/e/e2/KingAnglerfishHead.png/400px-KingAnglerfishHead.png"
     },
-    "Discuss": {
+    "Discus": {
       "price": 25,
       "rarity": "Common",
       "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/9/9b/Discus.png/250px-Discus.png"
@@ -200,17 +195,17 @@
       "rarity": "Uncommon",
       "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/6/66/Trout.png/250px-Trout.png"
     },
-    "Sea turtle": {
+    "Sea Turtle": {
       "price": 20,
       "rarity": "Rare",
       "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/5/52/SeaTurtle.png/250px-SeaTurtle.png"
     },
-    "Jaguar shark": {
+    "Jaguar Shark": {
       "price": 50,
       "rarity": "Epic",
       "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/1/18/JaguarShark.png/250px-JaguarShark.png"
     },
-    "Toucan fish": {
+    "Toucan Fish": {
       "price": 90,
       "rarity": "Epic",
       "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/a/ae/Toucanfish.png/250px-Toucanfish.png"
@@ -220,22 +215,22 @@
       "rarity": "Legendary",
       "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/2/21/Sacabambaspis.png/250px-Sacabambaspis.png"
     },
-    "Mosasaurus meat": {
+    "Mosasaurus Meat": {
       "price": 45,
       "rarity": "Legendary",
       "thumbnail": ""
     },
-    "Mosasaurus head": {
+    "Mosasaurus Head": {
       "price": 90,
       "rarity": "Legendary",
       "thumbnail": ""
     },
-    "Pelicaan eel meat": {
+    "Pelicaan Eel Meat": {
       "price": 75,
       "rarity": "Mythical",
       "thumbnail": ""
     },
-    "Pelicaan eel head": {
+    "Pelicaan Eel Head": {
       "price": 150,
       "rarity": "Mythical",
       "thumbnail": ""
@@ -260,17 +255,17 @@
       "rarity": "Uncommon",
       "thumbnail": ""
     },
-    "Atlantic optopus": {
+    "Atlantic Octopus": {
       "price": 60,
       "rarity": "Uncommon",
       "thumbnail": ""
     },
-    "Largemouth bass": {
+    "Largemouth Bass": {
       "price": 65,
       "rarity": "Rare",
       "thumbnail": ""
     },
-    "Sockeye salmon": {
+    "Sockeye Salmon": {
       "price": 75,
       "rarity": "Rare",
       "thumbnail": ""
@@ -280,12 +275,12 @@
       "rarity": "Rare",
       "thumbnail": ""
     },
-    "Manta ray": {
+    "Manta Ray": {
       "price": 48,
       "rarity": "Epic",
       "thumbnail": ""
     },
-    "Thresher shark": {
+    "Thresher Shark": {
       "price": 82,
       "rarity": "Epic",
       "thumbnail": ""
@@ -295,32 +290,32 @@
       "rarity": "Epic",
       "thumbnail": ""
     },
-    "Basking shark": {
+    "Basking Shark": {
       "price": 85,
       "rarity": "Epic",
       "thumbnail": ""
     },
-    "Phamtom jelly": {
+    "Phamtom Jelly": {
       "price": 145,
       "rarity": "Epic",
       "thumbnail": ""
     },
-    "Orca meat": {
+    "Orca Meat": {
       "price": 63,
       "rarity": "Legendary",
       "thumbnail": ""
     },
-    "Orca head": {
+    "Orca Head": {
       "price": 126,
       "rarity": "Legendary",
       "thumbnail": ""
     },
-    "Sea angel meat": {
+    "Sea Angel Meat": {
       "price": 75,
       "rarity": "Legendary",
       "thumbnail": ""
     },
-    "Sea angel head": {
+    "Sea Angel Head": {
       "price": 150,
       "rarity": "Legendary",
       "thumbnail": ""
@@ -329,6 +324,11 @@
       "price": 300,
       "rarity": "Mythical",
       "thumbnail": ""
+    },
+    "Shark": {
+      "price": 40,
+      "rarity": "Epic",
+      "thumbnail": "https://static.wikitide.net/deepspiritwiki/thumb/1/14/Shark.png/250px-Shark.png"
     }
   }
 }

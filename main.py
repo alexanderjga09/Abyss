@@ -18,40 +18,12 @@ class Client(commands.Bot):
 intents = discord.Intents.all()
 client = Client(intents=intents)
 
+placeholder: str = "https://static.wikitide.net/deepspiritwiki/thumb/4/47/Placeholder.png/250px-Placeholder.png"
+
 
 def main():
-    @client.slash_command(name="info_fish", description="placeholder")
-    async def info_fish(
-        interaction: discord.Interaction,
-        name=discord.Option(str, "The name of the fish"),
-        weight=discord.Option(float, "The weight of the fish"),
-        stars=discord.Option(int, "The number of stars the fish has"),
-        mutation=discord.Option(str, "The mutation of the fish", default=""),
-        dead: bool = False,
-    ):
-        fish = fs.Fish(
-            name,
-            round(weight if "," in str(weight) else (weight * 0.1), 1),
-            stars,
-            mutation,
-            dead,
-        )
-
-        embed = discord.Embed(
-            title=fish.name,
-            description=f"**Price:** ${fish.price()}\n**Weight:** {fish.weight} Kg",
-            color=discord.Color.blue(),
-        )
-        embed.add_field(
-            name="Details:",
-            value=f"**Stars:** {((':star: ' * fish.stars) + f'`x{0.25 + (0.25 * fish.stars)}`') if not fish.dead else ':skull: `x0.2`'} | **Rarity:** {fish.rarity} `{fish.production()['cycle_time']}m`\n**Mutation:** {fish.mutation} `x{fish.production()['mutation']}`",
-        )
-        embed.set_thumbnail(url=fish.thumbnail)
-
-        await interaction.response.send_message(embed=embed)
-
-    @client.slash_command(name="prod_fish", description="placeholder")
-    async def prod_fish(
+    @client.slash_command(name="fish", description="placeholder")
+    async def fish(
         interaction: discord.Interaction,
         name=discord.Option(str, "The name of the fish"),
         weight=discord.Option(float, "The weight of the fish"),
@@ -67,23 +39,112 @@ def main():
             mutation,
             dead,
         )
-        embed = discord.Embed(
-            title=f"{fish.name} (${fish.price()})",
-            description=f"**$/hr:** {fish.production(rsl=rsl)['roe_per_hour']}\n**Kg/hr:** {fish.production(rsl=rsl)['weight_per_hour']}\n"
-            if fish.production(rsl=rsl) is not None
-            else "-# Can't do that",
-            color=discord.Color.yellow(),
-        )
-        embed.add_field(
-            name="Details:",
-            value=f"**Stars:** {((':star: ' * fish.stars) + f'`x{0.25 + (0.25 * fish.stars)}`') if not fish.dead else ':skull: `x0.2`'} | **Rarity:** {fish.rarity} `{fish.production(rsl=rsl)['cycle_time']}m`\n**Mutation:** {fish.mutation} `x{fish.production(rsl=rsl)['mutation']}`",
-        )
+        try:
+            embed = discord.Embed(
+                title=f"{fs.Mayus(fish.name)} (${fish.price()}) ({fish.weight}Kg)",
+                description=f"**$/hr:** {fish.production(rsl=rsl)['roe_per_hour']} `50%~ {fish.production(rsl=rsl)['roe_per_hour'] / 2}`\n**Kg/hr:** {fish.production(rsl=rsl)['weight_per_hour']} `50%~ {fish.production(rsl=rsl)['weight_per_hour'] / 2}`\n"
+                if fish.production(rsl=rsl) is not None
+                else "-# Can't do that",
+                color=discord.Color.yellow(),
+            )
+            embed.add_field(
+                name="Details:",
+                value=f"**Stars:** {((':star: ' * fish.stars) + f'`x{0.25 + (0.25 * fish.stars)}`') if not fish.dead else ':skull: `x0.2`'} | **Rarity:** {fish.rarity} `{fish.production(rsl=rsl)['cycle_time']}m`\n**Mutation:** {fish.mutation} `x{fish.production(rsl=rsl)['mutation']}`",
+            )
 
-        embed.set_thumbnail(url=fish.thumbnail)
-        embed.set_image(url=fish.production(rsl=rsl)["chart"])
-        embed.set_footer(text=f"Roe Speed Level: {roman.toRoman(rsl)}")
+            embed.set_thumbnail(
+                url=fish.thumbnail if not fish.thumbnail == "" else placeholder
+            )
+            embed.set_image(url=fish.production(rsl=rsl)["chart"])
+            embed.set_footer(text=f"Roe Speed Level: {roman.toRoman(rsl)}")
 
-        await interaction.response.send_message(embed=embed)
+            await interaction.response.send_message(embed=embed)
+
+        except TypeError:
+            import json
+
+            with open("data/mutations.json") as f:
+                mutations = json.load(f)
+
+            embed = discord.Embed(
+                title=f"{fs.Mayus(fish.name)} (${fish.price()}) ({fish.weight}Kg)",
+                description=f"**$/hr:** {fish.production(rsl=rsl)['roe_per_hour']} `50%~ {fish.production(rsl=rsl)['roe_per_hour'] / 2}`\n**Kg/hr:** {fish.production(rsl=rsl)['weight_per_hour']} `50%~ {fish.production(rsl=rsl)['weight_per_hour'] / 2}`\n"
+                if fish.production(rsl=rsl) is not None
+                else "-# Can't do that",
+                color=discord.Color.yellow(),
+            )
+            embed.add_field(
+                name="Details:",
+                value=f"**Stars:** {((':star: ' * fish.stars) + f'`x{0.25 + (0.25 * fish.stars)}`') if not fish.dead else ':skull: `x0.2`'} | **Rarity:** {fish.rarity}\n**Mutation:** {fish.mutation} `x{mutations[fish.mutation if fish.mutation != '' else 'None']}`",
+            )
+
+            embed.set_thumbnail(
+                url=fish.thumbnail if not fish.thumbnail == "" else placeholder
+            )
+
+            await interaction.response.send_message(embed=embed)
+
+    @client.slash_command(name="fish-img", description="placeholder")
+    async def fish_img(
+        interaction: discord.Interaction, img: discord.Attachment, rsl: int
+    ):
+        await interaction.response.defer()
+
+        img_bytes = await img.read()
+        fish_instance = fs.FishImage(img_bytes, rsl)
+        resultado = fish_instance.get_fish()
+
+        fish = fs.Fish(
+            resultado["name"],
+            resultado["weight"],
+            resultado["stars"],
+            resultado["mutation"],
+            False if resultado["stars"] is not bool else True,
+        )
+        try:
+            embed = discord.Embed(
+                title=f"{fs.Mayus(fish.name)} (${fish.price()}) ({fish.weight}Kg)",
+                description=f"**$/hr:** {fish.production(rsl=rsl)['roe_per_hour']} `50%~ {fish.production(rsl=rsl)['roe_per_hour'] / 2}`\n**Kg/hr:** {fish.production(rsl=rsl)['weight_per_hour']} `50%~ {fish.production(rsl=rsl)['weight_per_hour'] / 2}`\n"
+                if fish.production(rsl=rsl) is not None
+                else "-# Can't do that",
+                color=discord.Color.yellow(),
+            )
+            embed.add_field(
+                name="Details:",
+                value=f"**Stars:** {((':star: ' * fish.stars) + f'`x{0.25 + (0.25 * fish.stars)}`') if not fish.dead else ':skull: `x0.2`'} | **Rarity:** {fish.rarity} `{fish.production(rsl=rsl)['cycle_time']}m`\n**Mutation:** {fish.mutation} `x{fish.production(rsl=rsl)['mutation']}`",
+            )
+
+            embed.set_thumbnail(
+                url=fish.thumbnail if not fish.thumbnail == "" else placeholder
+            )
+            embed.set_image(url=fish.production(rsl=rsl)["chart"])
+            embed.set_footer(text=f"Roe Speed Level: {roman.toRoman(rsl)}")
+
+            await interaction.followup.send(embed=embed)
+
+        except TypeError:
+            import json
+
+            with open("data/mutations.json") as f:
+                mutations = json.load(f)
+
+            embed = discord.Embed(
+                title=f"{fs.Mayus(fish.name)} (${fish.price()}) ({fish.weight}Kg)",
+                description=f"**$/hr:** {fish.production(rsl=rsl)['roe_per_hour']} `50%~ {fish.production(rsl=rsl)['roe_per_hour'] / 2}`\n**Kg/hr:** {fish.production(rsl=rsl)['weight_per_hour']} `50%~ {fish.production(rsl=rsl)['weight_per_hour'] / 2}`\n"
+                if fish.production(rsl=rsl) is not None
+                else "-# Can't do that",
+                color=discord.Color.yellow(),
+            )
+            embed.add_field(
+                name="Details:",
+                value=f"**Stars:** {((':star: ' * fish.stars) + f'`x{0.25 + (0.25 * fish.stars)}`') if not fish.dead else ':skull: `x0.2`'} | **Rarity:** {fish.rarity}\n**Mutation:** {fish.mutation} `x{mutations[fish.mutation if fish.mutation != '' else 'None']}`",
+            )
+
+            embed.set_thumbnail(
+                url=fish.thumbnail if not fish.thumbnail == "" else placeholder
+            )
+
+            await interaction.followup.send(embed=embed)
 
     client.run(os.getenv("TOKEN"))
 

@@ -1,4 +1,6 @@
+import io
 import json
+import re
 
 
 def Mph(mph):
@@ -61,18 +63,26 @@ def Mut(pr):
         return (0, "E")
 
 
+def Mayus(text: str) -> str:
+    return " ".join(map(str.capitalize, text.split(" ")))
+
+
+def PerHour(mount, cycle_time, rsl=0):
+    return (mount / (cycle_time * ((1.0 + (0.05 * rsl)) ** -1))) * 3600
+
+
 class Fish:
     def __init__(
         self,
         name: str,
         weight: float,
         stars: int,
-        mutation: str = "",
+        mutation: str = "None",
         dead: bool = False,
     ):
-        self.name = name.capitalize()
+        self.name = Mayus(name)
         self.weight = weight
-        self.stars = stars
+        self.stars = stars if "Meat" not in self.name and "Head" not in self.name else 3
 
         with open("data/prices.json") as f:
             prices = json.load(f)
@@ -101,7 +111,13 @@ class Fish:
         )
 
     def production(self, rsl: int = 0):
-        cycle_time = {"Common": 1, "Uncommon": 2, "Rare": 4, "Epic": 7, "Legendary": 10}
+        cycle_time = {
+            "Common": 60,
+            "Uncommon": 120,
+            "Rare": 240,
+            "Epic": 420,
+            "Legendary": 600,
+        }
 
         with open("data/prices.json") as f:
             fishes = json.load(f)
@@ -109,25 +125,16 @@ class Fish:
         with open("data/mutations.json") as f:
             mutations = json.load(f)
 
-        if "meat" not in self.name and "head" not in self.name:
+        if "Meat" not in self.name and "Head" not in self.name:
             price = self.price() * (0.01 if self.mutation != "" else 0.02)
-            pr_hour = (
-                price
-                / (
-                    cycle_time[fishes["fishes"][self.name]["rarity"]]
-                    * (1.0 - (0.05 * rsl))
-                )
-            ) * 60
-
             weight = self.weight * 0.02
 
-            we_hour = (
-                weight
-                / (
-                    cycle_time[fishes["fishes"][self.name]["rarity"]]
-                    * (1.0 - (0.05 * rsl))
-                )
-            ) * 60
+            pr_hour = PerHour(
+                price, cycle_time[fishes["fishes"][self.name]["rarity"]], rsl
+            )
+            we_hour = PerHour(
+                weight, cycle_time[fishes["fishes"][self.name]["rarity"]], rsl
+            )
 
             from quickchart import QuickChart
 
@@ -160,7 +167,7 @@ class Fish:
                                     else 0
                                 )[0],
                             ],
-                            "label": "Stats",
+                            "label": f"{self.name} (Stats)",
                         },
                     ],
                 },
@@ -186,7 +193,9 @@ class Fish:
 
             return {
                 "price_roe": round(price, 0),
-                "cycle_time": cycle_time[fishes["fishes"][self.name]["rarity"]],
+                "cycle_time": int(
+                    cycle_time[fishes["fishes"][self.name]["rarity"]] / 60
+                ),
                 "mutation": (mutations[self.mutation]) if self.mutation != "" else 1.0,
                 "roe_per_hour": round(pr_hour, 0),
                 "roe_per_day": round(pr_hour * 24, 0),
@@ -195,3 +204,66 @@ class Fish:
                 "weight_per_day": round(we_hour * 24, 2),
                 "chart": qc.get_url(),
             }
+
+
+def extract(txt: str):
+    with open("data/prices.json") as f:
+        fishes = json.load(f)
+
+    with open("data/mutations.json") as f:
+        mutations = json.load(f)
+
+    data = {
+        "mutation": "None",
+        "name": "None",
+        "stars": "None",
+        "weight": "None",
+    }
+
+    for x in mutations.keys():
+        if re.search(x, txt) is not None:
+            data["mutation"] = x
+            break
+
+    for x in fishes["fishes"].keys():
+        if re.search(x, txt) is not None:
+            data["name"] = x
+            break
+
+    estrellas = {"(x1)": 3, "(x075)": 2, "(x05)": 1, "(x02)": True}
+
+    for x in estrellas.keys():
+        if re.search(x, txt) is not None:
+            data["stars"] = int(estrellas[x])
+            break
+
+    weight_match = re.search(r"(\d+\.?\d*)\s*kg", txt)
+
+    data["weight"] = float(weight_match.group(0)[:-2])
+
+    return data
+
+
+class FishImage:
+    def __init__(self, img_bytes, rsl: int):
+        self.img_bytes = io.BytesIO(img_bytes)
+        self.rsl = rsl
+
+    def get_fish(self):
+        import pytesseract as tss
+        from PIL import Image
+
+        tss.pytesseract.tesseract_cmd = r"ocr\tesseract.exe"
+        image = Image.open(self.img_bytes).convert("L")
+
+        w, h = image.size
+        image = image.resize((w * 4, h * 4), Image.Resampling.LANCZOS)
+
+        fn = lambda x: 255 if x > 70 else 0
+        image = image.point(fn, mode="1")
+
+        custom_config = r"--psm 6 --oem 3"
+
+        text = tss.image_to_string(image, config=custom_config)
+
+        return extract(text)
