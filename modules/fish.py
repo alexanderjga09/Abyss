@@ -1,8 +1,8 @@
 import json
 
-from func.Mayus import Mayus
-from func.PerHour import PerHour
-from func.Ranks import KgRoe, Mph, Mut, PriceRoe
+from .func.Mayus import Mayus
+from .func.PerHour import PerHour
+from .func.Ranks import KgRoe, Mph, Mut, PriceRoe
 
 
 class Fish:

@@ -1,6 +1,6 @@
 import io
 
-from func.Extract import extract
+from .func.Extract import extract
 
 
 class FishImage:
