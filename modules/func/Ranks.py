@@ -1,28 +1,34 @@
+max_rank: int = 8000
+
+ranks_mph = max_rank / 5
+ranks_proe = (max_rank / 5) * 0.1
+
+
 def Mph(mph):
-    if mph >= 4000:
+    if mph >= ranks_mph * 5:
         return (5, "S")
-    if mph >= 3200:
+    if mph >= ranks_mph * 4:
         return (4, "A")
-    if mph >= 2400:
+    if mph >= ranks_mph * 3:
         return (3, "B")
-    if mph >= 1600:
+    if mph >= ranks_mph * 2:
         return (2, "C")
-    if mph >= 800:
+    if mph >= ranks_mph:
         return (1, "D")
     if mph >= 0:
         return (0, "E")
 
 
 def PriceRoe(pr):
-    if pr >= 400:
+    if pr >= ranks_proe * 5:
         return (5, "S")
-    if pr >= 320:
+    if pr >= ranks_proe * 4:
         return (4, "A")
-    if pr >= 240:
+    if pr >= ranks_proe * 3:
         return (3, "B")
-    if pr >= 160:
+    if pr >= ranks_proe * 2:
         return (2, "C")
-    if pr >= 80:
+    if pr >= ranks_proe:
         return (1, "D")
     if pr >= 0:
         return (0, "E")
