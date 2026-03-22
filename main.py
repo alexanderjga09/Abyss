@@ -1,3 +1,4 @@
+import json
 import os
 
 import discord
@@ -23,27 +24,95 @@ placeholder: str = "https://static.wikitide.net/deepspiritwiki/thumb/4/47/Placeh
 
 
 def main():
+    with open("data/prices.json") as f:
+        prices = json.load(f)
+
+    with open("data/mutations.json") as f:
+        mutations = json.load(f)
+
+    with open("data/race.json") as f:
+        race_json = json.load(f)
+
+    async def get_fish_names(ctx: discord.AutocompleteContext):
+        all_fishes = prices["fishes"].keys()
+        return [f for f in all_fishes if ctx.value.lower() in f.lower()]
+
+    async def get_mutations(ctx: discord.AutocompleteContext):
+        all_mutations = mutations.keys()
+        return [m for m in all_mutations if ctx.value.lower() in m.lower()]
+
     @client.slash_command(name="fish", description="placeholder")
     async def fish(
         interaction: discord.Interaction,
-        name=discord.Option(str, "The name of the fish"),
-        weight=discord.Option(float, "The weight of the fish"),
-        stars=discord.Option(int, "The number of stars the fish has"),
-        mutation=discord.Option(str, "The mutation of the fish", default=""),
+        name: str = discord.Option(
+            description="The name of the fish",
+            autocomplete=get_fish_names,
+        ),
+        weight=discord.Option(float, description="The weight of the fish"),
+        stars: int = discord.Option(
+            description="The number of stars the fish has",
+            choices=[
+                discord.OptionChoice(name="⭐ ⭐ ⭐", value="3"),
+                discord.OptionChoice(name="⭐ ⭐", value="2"),
+                discord.OptionChoice(name="⭐", value="1"),
+            ],
+        ),
+        mutation: str = discord.Option(
+            description="The mutation of the fish",
+            autocomplete=get_mutations,
+            default="None",
+        ),
         dead: bool = False,
         rsl: int = 0,
+        race=discord.Option(
+            str,
+            description="Your race",
+            choices=[
+                discord.OptionChoice(name=race_name, value=race_name)
+                for race_name in race_json.keys()
+            ],
+            default=1,
+        ),
+        cash: float = 0.0,
     ):
         fish = fs.Fish(
             name,
-            round(weight if "," in str(weight) else (weight * 0.1), 1),
-            stars,
+            round(weight if "," in str(weight) else (float(weight) * 0.1), 1),
+            int(stars),
             mutation,
             dead,
         )
+
+        cash = round(cash if "," in str(cash) else (float(cash) * 0.1), 1)
+        roe_per_hour = fish.production(rsl=rsl)["roe_per_hour"]
+
+        RoePerHour = (
+            f"**$/hr:** {roe_per_hour} `50%~ {round((roe_per_hour / 2), 0)}`"
+            if roe_per_hour is not None
+            else None
+        )
+        KgPerHour = (
+            f"**Kg/hr:** {(weight_ := fish.production(rsl=rsl)['weight_per_hour'])} `50%~ {round((weight_ / 2), 1)}`"
+            if fish.production(rsl=rsl) is not None
+            else None
+        )
+
+        with_race_ = fish.production(rsl=rsl, race=race)
+        Race = (
+            f"\n**With Race:** {round(roe_ := roe_per_hour * with_race_['with_race'], 0)} `50%~ {round((roe_ / 2), 0)}`"
+            if with_race_ is not None
+            else None
+        )
+        Cash = (
+            f"\n**With Cash:** {round(cash_ := roe_per_hour * (with_race_['with_race'] + (cash * 0.01)), 0)} `50%~ {round((cash_ / 2), 0)}`"
+            if with_race_ is not None
+            else None
+        )
+
         try:
             embed = discord.Embed(
                 title=f"{fs.Mayus(fish.name)} (${fish.price()}) ({fish.weight}Kg)",
-                description=f"**$/hr:** {fish.production(rsl=rsl)['roe_per_hour']} `50%~ {fish.production(rsl=rsl)['roe_per_hour'] / 2}`\n**Kg/hr:** {fish.production(rsl=rsl)['weight_per_hour']} `50%~ {fish.production(rsl=rsl)['weight_per_hour'] / 2}`\n"
+                description=f"{RoePerHour}\n{KgPerHour}\n{(Race if race != 1 else '')}{Cash if cash != 0.0 else ''}"
                 if fish.production(rsl=rsl) is not None
                 else "-# Can't do that",
                 color=discord.Color.yellow(),
@@ -57,7 +126,9 @@ def main():
                 url=fish.thumbnail if not fish.thumbnail == "" else placeholder
             )
             embed.set_image(url=fish.production(rsl=rsl)["chart"])
-            embed.set_footer(text=f"Roe Speed Level: {roman.toRoman(rsl)}")
+            embed.set_footer(
+                text=f"Roe Speed Level: {roman.toRoman(rsl)} | Race: {race if race != 1 else 'Default'} | Cash: {str(cash) + '%' if cash != 0.0 else 'Default'}"
+            )
 
             await interaction.response.send_message(embed=embed)
 
@@ -69,9 +140,11 @@ def main():
 
             embed = discord.Embed(
                 title=f"{fs.Mayus(fish.name)} (${fish.price()}) ({fish.weight}Kg)",
-                description=f"**$/hr:** {fish.production(rsl=rsl)['roe_per_hour']} `50%~ {fish.production(rsl=rsl)['roe_per_hour'] / 2}`\n**Kg/hr:** {fish.production(rsl=rsl)['weight_per_hour']} `50%~ {fish.production(rsl=rsl)['weight_per_hour'] / 2}`\n"
+                description=""
                 if fish.production(rsl=rsl) is not None
-                else "-# Can't do that",
+                else "-# Can't do that"
+                if race is int
+                else f"**With Race:** ${round(fish.price() * (race_json[race] if race != 1 else 1), 0)}\n**With Cash:** ${round(fish.price() * ((race_json[race] if race != 1 else 1) + (cash * 0.01)), 0)}",
                 color=discord.Color.yellow(),
             )
             embed.add_field(
@@ -82,12 +155,27 @@ def main():
             embed.set_thumbnail(
                 url=fish.thumbnail if not fish.thumbnail == "" else placeholder
             )
+            embed.set_footer(
+                text=f"Race: {race if race != 1 else 'Default'} | Cash: {str(cash) + '%' if cash != 0.0 else 'Default'}"
+            )
 
             await interaction.response.send_message(embed=embed)
 
     @client.slash_command(name="fish-img", description="placeholder")
     async def fish_img(
-        interaction: discord.Interaction, img: discord.Attachment, rsl: int
+        interaction: discord.Interaction,
+        img: discord.Attachment,
+        rsl: int = 0,
+        race=discord.Option(
+            str,
+            description="Your race",
+            choices=[
+                discord.OptionChoice(name=race_name, value=race_name)
+                for race_name in race_json.keys()
+            ],
+            default=1,
+        ),
+        cash: float = 0.0,
     ):
         await interaction.response.defer()
 
@@ -102,10 +190,38 @@ def main():
             resultado["mutation"],
             False if resultado["stars"] is not bool else True,
         )
+
+        cash = round(cash if "," in str(cash) else (float(cash) * 0.1), 1)
+        roe_per_hour = fish.production(rsl=rsl)["roe_per_hour"]
+
+        RoePerHour = (
+            f"**$/hr:** {roe_per_hour} `50%~ {round((roe_per_hour / 2), 0)}`"
+            if roe_per_hour is not None
+            else None
+        )
+        KgPerHour = (
+            f"**Kg/hr:** {(weight_ := fish.production(rsl=rsl)['weight_per_hour'])} `50%~ {round((weight_ / 2), 1)}`"
+            if fish.production(rsl=rsl) is not None
+            else None
+        )
+
+        with_race_ = fish.production(rsl=rsl, race=race)
+
+        Race = (
+            f"\n**With Race:** ${round(roe_ := roe_per_hour * with_race_['with_race'], 0)} `50%~ {round((roe_ / 2), 0)}`"
+            if with_race_ is not None
+            else None
+        )
+        Cash = (
+            f"\n**With Cash:** ${round(cash_ := roe_per_hour * (with_race_['with_race'] + (cash * 0.01)), 0)} `50%~ {round((cash_ / 2), 0)}`"
+            if with_race_ is not None
+            else None
+        )
+
         try:
             embed = discord.Embed(
                 title=f"{fs.Mayus(fish.name)} (${fish.price()}) ({fish.weight}Kg)",
-                description=f"**$/hr:** {fish.production(rsl=rsl)['roe_per_hour']} `50%~ {fish.production(rsl=rsl)['roe_per_hour'] / 2}`\n**Kg/hr:** {fish.production(rsl=rsl)['weight_per_hour']} `50%~ {fish.production(rsl=rsl)['weight_per_hour'] / 2}`\n"
+                description=f"{RoePerHour}\n{KgPerHour}\n{(Race if race != 1 else '')}{Cash if cash != 0.0 else ''}"
                 if fish.production(rsl=rsl) is not None
                 else "-# Can't do that",
                 color=discord.Color.yellow(),
@@ -119,7 +235,9 @@ def main():
                 url=fish.thumbnail if not fish.thumbnail == "" else placeholder
             )
             embed.set_image(url=fish.production(rsl=rsl)["chart"])
-            embed.set_footer(text=f"Roe Speed Level: {roman.toRoman(rsl)}")
+            embed.set_footer(
+                text=f"Roe Speed Level: {roman.toRoman(rsl)} | Race: {race if race != 1 else 'Default'} | Cash: {str(cash) + '%' if cash != 0.0 else 'Default'}"
+            )
 
             await interaction.followup.send(embed=embed)
 
@@ -131,9 +249,11 @@ def main():
 
             embed = discord.Embed(
                 title=f"{fs.Mayus(fish.name)} (${fish.price()}) ({fish.weight}Kg)",
-                description=f"**$/hr:** {fish.production(rsl=rsl)['roe_per_hour']} `50%~ {fish.production(rsl=rsl)['roe_per_hour'] / 2}`\n**Kg/hr:** {fish.production(rsl=rsl)['weight_per_hour']} `50%~ {fish.production(rsl=rsl)['weight_per_hour'] / 2}`\n"
+                description=""
                 if fish.production(rsl=rsl) is not None
-                else "-# Can't do that",
+                else "-# Can't do that"
+                if race is int
+                else f"**With Race:** ${round(fish.price() * (race_json[race] if race != 1 else 1), 0)}\n**With Cash:** ${round(fish.price() * ((race_json[race] if race != 1 else 1) + (cash * 0.01)), 0)}",
                 color=discord.Color.yellow(),
             )
             embed.add_field(
@@ -143,6 +263,9 @@ def main():
 
             embed.set_thumbnail(
                 url=fish.thumbnail if not fish.thumbnail == "" else placeholder
+            )
+            embed.set_footer(
+                text=f"Race: {race if race != 1 else 'Default'} | Cash: {str(cash) + '%' if cash != 0.0 else 'Default'}"
             )
 
             await interaction.followup.send(embed=embed)

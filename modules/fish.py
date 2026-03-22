@@ -44,7 +44,7 @@ class Fish:
             * (mutations[self.mutation] if self.mutation != "" else 1.0)
         )
 
-    def production(self, rsl: int = 0):
+    def production(self, rsl: int = 0, race=1):
         cycle_time = {
             "Common": 60,
             "Uncommon": 120,
@@ -125,6 +125,9 @@ class Fish:
                 },
             }
 
+            with open("data/race.json", "r") as f:
+                race_json = json.load(f)
+
             return {
                 "price_roe": round(price, 0),
                 "cycle_time": int(
@@ -136,5 +139,6 @@ class Fish:
                 "weight_roe": round(weight, 2),
                 "weight_per_hour": round(we_hour, 2),
                 "weight_per_day": round(we_hour * 24, 2),
+                "with_race": (race if race == 1 else race_json[race]),
                 "chart": qc.get_url(),
             }
