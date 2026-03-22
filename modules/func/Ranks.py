@@ -35,15 +35,15 @@ def PriceRoe(pr):
 
 
 def KgRoe(kr):
-    if kr >= 40:
+    if kr >= 50:
         return (0, "E")
-    if kr >= 32:
+    if kr >= 40:
         return (1, "D")
-    if kr >= 24:
+    if kr >= 30:
         return (2, "C")
-    if kr >= 16:
+    if kr >= 20:
         return (3, "B")
-    if kr >= 8:
+    if kr >= 10:
         return (4, "A")
     if kr >= 0:
         return (5, "S")
