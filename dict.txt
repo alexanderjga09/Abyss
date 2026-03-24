@@ -143,3 +143,6 @@ Rare
 Epic
 Legendary
 Mythical
+Small
+Big
+Giant

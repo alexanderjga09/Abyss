@@ -1,7 +1,7 @@
 import io
-import re
 
-from .func.Autocorrector import correct_text
+from .func.Autocorrector import Text
+from .func.Corrector_w import corrects_weights
 from .func.Extract import extract
 
 
@@ -20,7 +20,7 @@ class FishImage:
         image = Image.open(self.img_bytes).convert("L")
 
         w, h = image.size
-        image = image.resize((w * 4, h * 4), Image.Resampling.LANCZOS)
+        image = image.resize((w * 6, h * 6), Image.Resampling.LANCZOS)
 
         img_np = np.array(image)
 
@@ -39,14 +39,13 @@ class FishImage:
 
         text = tss.image_to_string(image, config=custom_config)
 
+        print(text)
+
         with open("dict.txt", "r") as f:
             expected_words = [line.strip() for line in f]
 
-        text = correct_text(text, expected_words, cutoff=0.75)
-        patron = (
-            r"\b(Common|Uncommon|Rare|Epic|Legendary|Mythical)\b.*?(\d+(?:\.\d+)?\s?kg)"
-        )
+        text = Text(text)
+        text_c = text.correct(expected_words, cutoff=0.6)
+        text_c = corrects_weights(text_c)
 
-        text = re.sub(r"\bTIL(\d*kg)\b", r"111.\1", text)  # PARCHE
-
-        return extract(re.sub(patron, r"\1 \2", text))
+        return extract(text.cut_(text_c))
