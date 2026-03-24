@@ -84,30 +84,34 @@ def main():
         )
 
         cash = round(cash if "," in str(cash) else (float(cash) * 0.1), 1)
-        roe_per_hour = fish.production(rsl=rsl)["roe_per_hour"]
 
-        RoePerHour = (
-            f"**$/hr:** {roe_per_hour} `50%~ {round((roe_per_hour / 2), 0)}`"
-            if roe_per_hour is not None
-            else None
-        )
-        KgPerHour = (
-            f"**Kg/hr:** {(weight_ := fish.production(rsl=rsl)['weight_per_hour'])} `50%~ {round((weight_ / 2), 1)}`"
-            if fish.production(rsl=rsl) is not None
-            else None
-        )
+        try:
+            roe_per_hour = fish.production(rsl=rsl)["roe_per_hour"]
 
-        with_race_ = fish.production(rsl=rsl, race=race)
-        Race = (
-            f"\n**With Race:** {round(roe_ := roe_per_hour * with_race_['with_race'], 0)} `50%~ {round((roe_ / 2), 0)}`"
-            if with_race_ is not None
-            else None
-        )
-        Cash = (
-            f"\n**With Cash:** {round(cash_ := roe_per_hour * (with_race_['with_race'] + (cash * 0.01)), 0)} `50%~ {round((cash_ / 2), 0)}`"
-            if with_race_ is not None
-            else None
-        )
+            RoePerHour = (
+                f"**$/hr:** {roe_per_hour} `50%~ {round((roe_per_hour / 2), 0)}`"
+                if roe_per_hour is not None
+                else None
+            )
+            KgPerHour = (
+                f"**Kg/hr:** {(weight_ := fish.production(rsl=rsl)['weight_per_hour'])} `50%~ {round((weight_ / 2), 1)}`"
+                if fish.production(rsl=rsl) is not None
+                else None
+            )
+
+            with_race_ = fish.production(rsl=rsl, race=race)
+            Race = (
+                f"\n**With Race:** {round(roe_ := roe_per_hour * with_race_['with_race'], 0)} `50%~ {round((roe_ / 2), 0)}`"
+                if with_race_ is not None
+                else None
+            )
+            Cash = (
+                f"\n**With Cash:** {round(cash_ := roe_per_hour * (with_race_['with_race'] + (cash * 0.01)), 0)} `50%~ {round((cash_ / 2), 0)}`"
+                if with_race_ is not None
+                else None
+            )
+        except Exception:
+            pass
 
         try:
             embed = discord.Embed(
@@ -192,31 +196,35 @@ def main():
         )
 
         cash = round(cash if "," in str(cash) else (float(cash) * 0.1), 1)
-        roe_per_hour = fish.production(rsl=rsl)["roe_per_hour"]
 
-        RoePerHour = (
-            f"**$/hr:** {roe_per_hour} `50%~ {round((roe_per_hour / 2), 0)}`"
-            if roe_per_hour is not None
-            else None
-        )
-        KgPerHour = (
-            f"**Kg/hr:** {(weight_ := fish.production(rsl=rsl)['weight_per_hour'])} `50%~ {round((weight_ / 2), 1)}`"
-            if fish.production(rsl=rsl) is not None
-            else None
-        )
+        try:
+            roe_per_hour = fish.production(rsl=rsl)["roe_per_hour"]
 
-        with_race_ = fish.production(rsl=rsl, race=race)
+            RoePerHour = (
+                f"**$/hr:** {roe_per_hour} `50%~ {round((roe_per_hour / 2), 0)}`"
+                if roe_per_hour is not None
+                else None
+            )
+            KgPerHour = (
+                f"**Kg/hr:** {(weight_ := fish.production(rsl=rsl)['weight_per_hour'])} `50%~ {round((weight_ / 2), 1)}`"
+                if fish.production(rsl=rsl) is not None
+                else None
+            )
 
-        Race = (
-            f"\n**With Race:** ${round(roe_ := roe_per_hour * with_race_['with_race'], 0)} `50%~ {round((roe_ / 2), 0)}`"
-            if with_race_ is not None
-            else None
-        )
-        Cash = (
-            f"\n**With Cash:** ${round(cash_ := roe_per_hour * (with_race_['with_race'] + (cash * 0.01)), 0)} `50%~ {round((cash_ / 2), 0)}`"
-            if with_race_ is not None
-            else None
-        )
+            with_race_ = fish.production(rsl=rsl, race=race)
+
+            Race = (
+                f"\n**With Race:** ${round(roe_ := roe_per_hour * with_race_['with_race'], 0)} `50%~ {round((roe_ / 2), 0)}`"
+                if with_race_ is not None
+                else None
+            )
+            Cash = (
+                f"\n**With Cash:** ${round(cash_ := roe_per_hour * (with_race_['with_race'] + (cash * 0.01)), 0)} `50%~ {round((cash_ / 2), 0)}`"
+                if with_race_ is not None
+                else None
+            )
+        except Exception:
+            pass
 
         try:
             embed = discord.Embed(

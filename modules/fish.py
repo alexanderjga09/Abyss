@@ -51,6 +51,7 @@ class Fish:
             "Rare": 240,
             "Epic": 420,
             "Legendary": 600,
+            "Mythical": 900,
         }
 
         with open("data/prices.json") as f:

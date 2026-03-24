@@ -9,6 +9,8 @@ def extract(txt: str):
     with open("data/mutations.json") as f:
         mutations = json.load(f)
 
+    print(txt)
+
     data = {
         "mutation": "None",
         "name": "None",
@@ -16,13 +18,16 @@ def extract(txt: str):
         "weight": "None",
     }
 
-    for x, y in mutations.items():
+    for x in mutations.keys():
         if re.search(x, txt) is not None:
             data["mutation"] = x
             break
 
-        if re.search(("x" + str(y)), txt) is not None and data["mutation"] == "None":
-            data["mutation"] = x
+    unreadables = {"x6.66": "Shadow", "x2.8": "Amber"}
+
+    for x, y in unreadables.items():
+        if re.search(x, txt) is not None and data["mutation"] == "None":
+            data["mutation"] = y
             break
 
     for x in fishes["fishes"].keys():
@@ -32,8 +37,10 @@ def extract(txt: str):
 
     estrellas = {
         "(x1)": 3,
+        "(01)": 3,
         "(x075)": 2,
         "(x0.75)": 2,
+        "(x07)": 2,
         "(x05)": 1,
         "(x0.5)": 1,
         "(x02)": True,
