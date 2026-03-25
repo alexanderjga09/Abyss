@@ -74,6 +74,18 @@ def main():
             default=1,
         ),
         cash: float = 0.0,
+        food: int = discord.Option(
+            description="The food the fish has",
+            choices=[
+                discord.OptionChoice(name="Star Feed", value="8"),
+                discord.OptionChoice(name="Octupus Feed", value="6"),
+                discord.OptionChoice(name="Shrimp Feed", value="4"),
+                discord.OptionChoice(name="Worm Feed", value="3"),
+                discord.OptionChoice(name="Fish Feed", value="2"),
+                discord.OptionChoice(name="Algae Feed", value="1"),
+            ],
+            default=0,
+        ),
     ):
         fish = fs.Fish(
             name,
@@ -86,7 +98,7 @@ def main():
         cash = round(cash if "," in str(cash) else (float(cash) * 0.1), 1)
 
         try:
-            roe_per_hour = fish.production(rsl=rsl)["roe_per_hour"]
+            roe_per_hour = fish.production(rsl=rsl, food=int(food))["roe_per_hour"]
 
             RoePerHour = (
                 f"**$/hr:** {roe_per_hour} `50%~ {round((roe_per_hour / 2), 0)}`"
@@ -94,12 +106,12 @@ def main():
                 else None
             )
             KgPerHour = (
-                f"**Kg/hr:** {(weight_ := fish.production(rsl=rsl)['weight_per_hour'])} `50%~ {round((weight_ / 2), 1)}`"
-                if fish.production(rsl=rsl) is not None
+                f"**Kg/hr:** {(weight_ := fish.production(rsl=rsl, food=int(food))['weight_per_hour'])} `50%~ {round((weight_ / 2), 1)}`"
+                if fish.production(rsl=rsl, food=int(food)) is not None
                 else None
             )
 
-            with_race_ = fish.production(rsl=rsl, race=race)
+            with_race_ = fish.production(rsl=rsl, race=race, food=int(food))
             Race = (
                 f"\n**With Race:** {round(roe_ := roe_per_hour * with_race_['with_race'], 0)} `50%~ {round((roe_ / 2), 0)}`"
                 if with_race_ is not None
@@ -129,10 +141,18 @@ def main():
             embed.set_thumbnail(
                 url=fish.thumbnail if not fish.thumbnail == "" else placeholder
             )
-            embed.set_image(url=fish.production(rsl=rsl)["chart"])
-            embed.set_footer(
-                text=f"Roe Speed Level: {roman.toRoman(rsl)} | Race: {race if race != 1 else 'Default'} | Cash: {str(cash) + '%' if cash != 0.0 else 'Default'}"
+            embed.set_image(url=fish.production(rsl=rsl, food=int(food))["chart"])
+
+            RSL = (
+                f"Roe Speed Level: {roman.toRoman(rsl)}"
+                if roman.toRoman(rsl) != "N"
+                else ""
             )
+            RACE = f"Race: {race}" if race != 1 else ""
+            CASH = f"Cash: {str(cash) + '%'}" if cash != 0.0 else ""
+            FOOD = f"Food: +{5 * int(food)}%" if food != 0 else ""
+            footer = " | ".join([x for x in [RSL, RACE, CASH, FOOD] if x != ""])
+            embed.set_footer(text=footer)
 
             await interaction.response.send_message(embed=embed)
 
@@ -159,9 +179,11 @@ def main():
             embed.set_thumbnail(
                 url=fish.thumbnail if not fish.thumbnail == "" else placeholder
             )
-            embed.set_footer(
-                text=f"Race: {race if race != 1 else 'Default'} | Cash: {str(cash) + '%' if cash != 0.0 else 'Default'}"
-            )
+
+            RACE = f"Race: {race}" if race != 1 else ""
+            CASH = f"Cash: {str(cash) + '%'}" if cash != 0.0 else ""
+            footer = " | ".join([x for x in [RACE, CASH] if x != ""])
+            embed.set_footer(text=footer)
 
             await interaction.response.send_message(embed=embed)
 
@@ -180,6 +202,18 @@ def main():
             default=1,
         ),
         cash: float = 0.0,
+        food: int = discord.Option(
+            description="The food the fish has",
+            choices=[
+                discord.OptionChoice(name="Star Feed", value="8"),
+                discord.OptionChoice(name="Octupus Feed", value="6"),
+                discord.OptionChoice(name="Shrimp Feed", value="4"),
+                discord.OptionChoice(name="Worm Feed", value="3"),
+                discord.OptionChoice(name="Fish Feed", value="2"),
+                discord.OptionChoice(name="Algae Feed", value="1"),
+            ],
+            default=0,
+        ),
     ):
         await interaction.response.defer()
 
@@ -198,7 +232,7 @@ def main():
         cash = round(cash if "," in str(cash) else (float(cash) * 0.1), 1)
 
         try:
-            roe_per_hour = fish.production(rsl=rsl)["roe_per_hour"]
+            roe_per_hour = fish.production(rsl=rsl, food=int(food))["roe_per_hour"]
 
             RoePerHour = (
                 f"**$/hr:** {roe_per_hour} `50%~ {round((roe_per_hour / 2), 0)}`"
@@ -206,12 +240,12 @@ def main():
                 else None
             )
             KgPerHour = (
-                f"**Kg/hr:** {(weight_ := fish.production(rsl=rsl)['weight_per_hour'])} `50%~ {round((weight_ / 2), 1)}`"
-                if fish.production(rsl=rsl) is not None
+                f"**Kg/hr:** {(weight_ := fish.production(rsl=rsl, food=int(food))['weight_per_hour'])} `50%~ {round((weight_ / 2), 1)}`"
+                if fish.production(rsl=rsl, food=int(food)) is not None
                 else None
             )
 
-            with_race_ = fish.production(rsl=rsl, race=race)
+            with_race_ = fish.production(rsl=rsl, race=race, food=int(food))
 
             Race = (
                 f"\n**With Race:** ${round(roe_ := roe_per_hour * with_race_['with_race'], 0)} `50%~ {round((roe_ / 2), 0)}`"
@@ -242,10 +276,18 @@ def main():
             embed.set_thumbnail(
                 url=fish.thumbnail if not fish.thumbnail == "" else placeholder
             )
-            embed.set_image(url=fish.production(rsl=rsl)["chart"])
-            embed.set_footer(
-                text=f"Roe Speed Level: {roman.toRoman(rsl)} | Race: {race if race != 1 else 'Default'} | Cash: {str(cash) + '%' if cash != 0.0 else 'Default'}"
+            embed.set_image(url=fish.production(rsl=rsl, food=int(food))["chart"])
+
+            RSL = (
+                f"Roe Speed Level: {roman.toRoman(rsl)}"
+                if roman.toRoman(rsl) != "N"
+                else ""
             )
+            RACE = f"Race: {race}" if race != 1 else ""
+            CASH = f"Cash: {str(cash) + '%'}" if cash != 0.0 else ""
+            FOOD = f"Food: +{5 * int(food)}%" if food != 0 else ""
+            footer = " | ".join([x for x in [RSL, RACE, CASH, FOOD] if x != ""])
+            embed.set_footer(text=footer)
 
             await interaction.followup.send(embed=embed)
 
@@ -272,9 +314,11 @@ def main():
             embed.set_thumbnail(
                 url=fish.thumbnail if not fish.thumbnail == "" else placeholder
             )
-            embed.set_footer(
-                text=f"Race: {race if race != 1 else 'Default'} | Cash: {str(cash) + '%' if cash != 0.0 else 'Default'}"
-            )
+
+            RACE = f"Race: {race}" if race != 1 else ""
+            CASH = f"Cash: {str(cash) + '%'}" if cash != 0.0 else ""
+            footer = " | ".join([x for x in [RACE, CASH] if x != ""])
+            embed.set_footer(text=footer)
 
             await interaction.followup.send(embed=embed)
 

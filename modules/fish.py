@@ -44,7 +44,7 @@ class Fish:
             * (mutations[self.mutation] if self.mutation != "" else 1.0)
         )
 
-    def production(self, rsl: int = 0, race=1):
+    def production(self, rsl: int = 0, race=1, food=0):
         cycle_time = {
             "Common": 60,
             "Uncommon": 120,
@@ -65,10 +65,10 @@ class Fish:
             weight = self.weight * 0.02
 
             pr_hour = PerHour(
-                price, cycle_time[fishes["fishes"][self.name]["rarity"]], rsl
+                price, cycle_time[fishes["fishes"][self.name]["rarity"]], rsl, food
             )
             we_hour = PerHour(
-                weight, cycle_time[fishes["fishes"][self.name]["rarity"]], rsl
+                weight, cycle_time[fishes["fishes"][self.name]["rarity"]], rsl, food
             )
 
             from quickchart import QuickChart
