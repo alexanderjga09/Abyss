@@ -150,7 +150,7 @@ def main():
             )
             RACE = f"Race: {race}" if race != 1 else ""
             CASH = f"Cash: {str(cash) + '%'}" if cash != 0.0 else ""
-            FOOD = f"Food: +{5 * int(food)}%" if food != 0 else ""
+            FOOD = f"Feed: +{5 * int(food)}%" if food != 0 else ""
             footer = " | ".join([x for x in [RSL, RACE, CASH, FOOD] if x != ""])
             embed.set_footer(text=footer)
 
@@ -285,7 +285,7 @@ def main():
             )
             RACE = f"Race: {race}" if race != 1 else ""
             CASH = f"Cash: {str(cash) + '%'}" if cash != 0.0 else ""
-            FOOD = f"Food: +{5 * int(food)}%" if food != 0 else ""
+            FOOD = f"Feed: +{5 * int(food)}%" if food != 0 else ""
             footer = " | ".join([x for x in [RSL, RACE, CASH, FOOD] if x != ""])
             embed.set_footer(text=footer)
 
