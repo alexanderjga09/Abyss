@@ -74,8 +74,8 @@ def main():
             default=1,
         ),
         cash: float = 0.0,
-        food: int = discord.Option(
-            description="The food the fish has",
+        feed: int = discord.Option(
+            description="The feed the fish has",
             choices=[
                 discord.OptionChoice(name="Star Feed", value="8"),
                 discord.OptionChoice(name="Octupus Feed", value="6"),
@@ -98,7 +98,7 @@ def main():
         cash = round(cash if "," in str(cash) else (float(cash) * 0.1), 1)
 
         try:
-            roe_per_hour = fish.production(rsl=rsl, food=int(food))["roe_per_hour"]
+            roe_per_hour = fish.production(rsl=rsl, feed=int(feed))["roe_per_hour"]
 
             RoePerHour = (
                 f"**$/hr:** {roe_per_hour} `50%~ {round((roe_per_hour / 2), 0)}`"
@@ -106,12 +106,12 @@ def main():
                 else None
             )
             KgPerHour = (
-                f"**Kg/hr:** {(weight_ := fish.production(rsl=rsl, food=int(food))['weight_per_hour'])} `50%~ {round((weight_ / 2), 1)}`"
-                if fish.production(rsl=rsl, food=int(food)) is not None
+                f"**Kg/hr:** {(weight_ := fish.production(rsl=rsl, feed=int(feed))['weight_per_hour'])} `50%~ {round((weight_ / 2), 1)}`"
+                if fish.production(rsl=rsl, feed=int(feed)) is not None
                 else None
             )
 
-            with_race_ = fish.production(rsl=rsl, race=race, food=int(food))
+            with_race_ = fish.production(rsl=rsl, race=race, food=int(feed))
             Race = (
                 f"\n**With Race:** {round(roe_ := roe_per_hour * with_race_['with_race'], 0)} `50%~ {round((roe_ / 2), 0)}`"
                 if with_race_ is not None
@@ -141,7 +141,7 @@ def main():
             embed.set_thumbnail(
                 url=fish.thumbnail if not fish.thumbnail == "" else placeholder
             )
-            embed.set_image(url=fish.production(rsl=rsl, food=int(food))["chart"])
+            embed.set_image(url=fish.production(rsl=rsl, feed=int(feed))["chart"])
 
             RSL = (
                 f"Roe Speed Level: {roman.toRoman(rsl)}"
@@ -150,7 +150,7 @@ def main():
             )
             RACE = f"Race: {race}" if race != 1 else ""
             CASH = f"Cash: {str(cash) + '%'}" if cash != 0.0 else ""
-            FOOD = f"Feed: +{5 * int(food)}%" if food != 0 else ""
+            FOOD = f"Feed: +{5 * int(feed)}%" if feed != 0 else ""
             footer = " | ".join([x for x in [RSL, RACE, CASH, FOOD] if x != ""])
             embed.set_footer(text=footer)
 
@@ -168,7 +168,7 @@ def main():
                 if fish.production(rsl=rsl) is not None
                 else "-# Can't do that"
                 if race is int
-                else f"**With Race:** ${round(fish.price() * (race_json[race] if race != 1 else 1), 0)}\n**With Cash:** ${round(fish.price() * ((race_json[race] if race != 1 else 1) + (cash * 0.01)), 0)}",
+                else f"**With Race:** ${int(round(fish.price() * (race_json[race] if race != 1 else 1), 0))}\n**With Cash:** ${int(round(fish.price() * ((race_json[race] if race != 1 else 1) + (cash * 0.01)), 0))}",
                 color=discord.Color.yellow(),
             )
             embed.add_field(
@@ -202,8 +202,8 @@ def main():
             default=1,
         ),
         cash: float = 0.0,
-        food: int = discord.Option(
-            description="The food the fish has",
+        feed: int = discord.Option(
+            description="The feed the fish has",
             choices=[
                 discord.OptionChoice(name="Star Feed", value="8"),
                 discord.OptionChoice(name="Octupus Feed", value="6"),
@@ -232,7 +232,7 @@ def main():
         cash = round(cash if "," in str(cash) else (float(cash) * 0.1), 1)
 
         try:
-            roe_per_hour = fish.production(rsl=rsl, food=int(food))["roe_per_hour"]
+            roe_per_hour = fish.production(rsl=rsl, feed=int(feed))["roe_per_hour"]
 
             RoePerHour = (
                 f"**$/hr:** {roe_per_hour} `50%~ {round((roe_per_hour / 2), 0)}`"
@@ -240,12 +240,12 @@ def main():
                 else None
             )
             KgPerHour = (
-                f"**Kg/hr:** {(weight_ := fish.production(rsl=rsl, food=int(food))['weight_per_hour'])} `50%~ {round((weight_ / 2), 1)}`"
-                if fish.production(rsl=rsl, food=int(food)) is not None
+                f"**Kg/hr:** {(weight_ := fish.production(rsl=rsl, feed=int(feed))['weight_per_hour'])} `50%~ {round((weight_ / 2), 1)}`"
+                if fish.production(rsl=rsl, feed=int(feed)) is not None
                 else None
             )
 
-            with_race_ = fish.production(rsl=rsl, race=race, food=int(food))
+            with_race_ = fish.production(rsl=rsl, race=race, feed=int(feed))
 
             Race = (
                 f"\n**With Race:** ${round(roe_ := roe_per_hour * with_race_['with_race'], 0)} `50%~ {round((roe_ / 2), 0)}`"
@@ -276,7 +276,7 @@ def main():
             embed.set_thumbnail(
                 url=fish.thumbnail if not fish.thumbnail == "" else placeholder
             )
-            embed.set_image(url=fish.production(rsl=rsl, food=int(food))["chart"])
+            embed.set_image(url=fish.production(rsl=rsl, feed=int(feed))["chart"])
 
             RSL = (
                 f"Roe Speed Level: {roman.toRoman(rsl)}"
@@ -285,7 +285,7 @@ def main():
             )
             RACE = f"Race: {race}" if race != 1 else ""
             CASH = f"Cash: {str(cash) + '%'}" if cash != 0.0 else ""
-            FOOD = f"Feed: +{5 * int(food)}%" if food != 0 else ""
+            FOOD = f"Feed: +{5 * int(feed)}%" if feed != 0 else ""
             footer = " | ".join([x for x in [RSL, RACE, CASH, FOOD] if x != ""])
             embed.set_footer(text=footer)
 
@@ -303,7 +303,7 @@ def main():
                 if fish.production(rsl=rsl) is not None
                 else "-# Can't do that"
                 if race is int
-                else f"**With Race:** ${round(fish.price() * (race_json[race] if race != 1 else 1), 0)}\n**With Cash:** ${round(fish.price() * ((race_json[race] if race != 1 else 1) + (cash * 0.01)), 0)}",
+                else f"**With Race:** ${int(round(fish.price() * (race_json[race] if race != 1 else 1), 0))}\n**With Cash:** ${int(round(fish.price() * ((race_json[race] if race != 1 else 1) + (cash * 0.01)), 0))}",
                 color=discord.Color.yellow(),
             )
             embed.add_field(
