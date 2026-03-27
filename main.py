@@ -100,6 +100,8 @@ def main():
             default=0,
         ),
     ):
+        await interaction.response.defer()
+
         fish = fs.Fish(
             name,
             round(weight if "," in str(weight) else (float(weight) * 0.1), 1),
@@ -110,38 +112,31 @@ def main():
 
         cash = round(cash if "," in str(cash) else (float(cash) * 0.1), 1)
 
+        RoePerHour = None
+        KgPerHour = None
+        Race = None
+        Cash = None
+
         try:
             roe_per_hour = fish.production(rsl=int(rsl), feed=int(feed))["roe_per_hour"]
 
             RoePerHour = (
                 f"**$/hr:** {roe_per_hour} `50%~ {round((roe_per_hour / 2), 0)}`"
-                if roe_per_hour is not None
-                else None
             )
-            KgPerHour = (
-                f"**Kg/hr:** {(weight_ := fish.production(rsl=int(rsl), feed=int(feed))['weight_per_hour'])} `50%~ {round((weight_ / 2), 1)}`"
-                if fish.production(rsl=int(rsl), feed=int(feed)) is not None
-                else None
-            )
+            KgPerHour = f"**Kg/hr:** {(weight_ := fish.production(rsl=int(rsl), feed=int(feed))['weight_per_hour'])} `50%~ {round((weight_ / 2), 1)}`"
 
             with_race_ = fish.production(rsl=int(rsl), race=race, food=int(feed))
-            Race = (
-                f"\n**With Race:** {round(roe_ := roe_per_hour * with_race_['with_race'], 0)} `50%~ {round((roe_ / 2), 0)}`"
-                if with_race_ is not None
-                else None
-            )
-            Cash = (
-                f"\n**With Cash:** {round(cash_ := roe_per_hour * (with_race_['with_race'] + (cash * 0.01)), 0)} `50%~ {round((cash_ / 2), 0)}`"
-                if with_race_ is not None
-                else None
-            )
+
+            Race = f"\n**With Race:** {round(roe_ := roe_per_hour * with_race_['with_race'], 0)} `50%~ {round((roe_ / 2), 0)}`"
+            Cash = f"\n**With Cash:** {round(cash_ := roe_per_hour * (with_race_['with_race'] + (cash * 0.01)), 0)} `50%~ {round((cash_ / 2), 0)}`"
+
         except Exception:
             pass
 
         try:
             embed = discord.Embed(
                 title=f"{fs.Mayus(fish.name)} (${int(round(fish.price() * ((race_json[race] if race != 1 else 1) + cash)))}) ({fish.weight}Kg)",
-                description=f"{RoePerHour}\n{KgPerHour}\n{(Race if race != 1 else '')}{Cash if cash != 0.0 else ''}"
+                description=f"{RoePerHour}\n{KgPerHour}\n{'\n'.join([x for x in [Race, Cash] if x is not None])}"
                 if fish.production(rsl=int(rsl)) is not None
                 else "-# Can't do that",
                 color=discord.Color.yellow(),
@@ -167,7 +162,7 @@ def main():
             footer = " | ".join([x for x in [RSL, RACE, CASH, FOOD] if x != ""])
             embed.set_footer(text=footer)
 
-            await interaction.response.send_message(embed=embed)
+            await interaction.followup.send(embed=embed)
 
         except TypeError:
             import json
@@ -257,39 +252,30 @@ def main():
 
         cash = round(cash if "," in str(cash) else (float(cash) * 0.1), 1)
 
+        RoePerHour = None
+        KgPerHour = None
+        Race = None
+        Cash = None
+
         try:
             roe_per_hour = fish.production(rsl=int(rsl), feed=int(feed))["roe_per_hour"]
 
             RoePerHour = (
                 f"**$/hr:** {roe_per_hour} `50%~ {round((roe_per_hour / 2), 0)}`"
-                if roe_per_hour is not None
-                else None
             )
-            KgPerHour = (
-                f"**Kg/hr:** {(weight_ := fish.production(rsl=int(rsl), feed=int(feed))['weight_per_hour'])} `50%~ {round((weight_ / 2), 1)}`"
-                if fish.production(rsl=int(rsl), feed=int(feed)) is not None
-                else None
-            )
+            KgPerHour = f"**Kg/hr:** {(weight_ := fish.production(rsl=int(rsl), feed=int(feed))['weight_per_hour'])} `50%~ {round((weight_ / 2), 1)}`"
 
             with_race_ = fish.production(rsl=int(rsl), race=race, feed=int(feed))
 
-            Race = (
-                f"\n**With Race:** ${round(roe_ := roe_per_hour * with_race_['with_race'], 0)} `50%~ {round((roe_ / 2), 0)}`"
-                if with_race_ is not None
-                else None
-            )
-            Cash = (
-                f"\n**With Cash:** ${round(cash_ := roe_per_hour * (with_race_['with_race'] + (cash * 0.01)), 0)} `50%~ {round((cash_ / 2), 0)}`"
-                if with_race_ is not None
-                else None
-            )
+            Race = f"\n**With Race:** ${round(roe_ := roe_per_hour * with_race_['with_race'], 0)} `50%~ {round((roe_ / 2), 0)}`"
+            Cash = f"\n**With Cash:** ${round(cash_ := roe_per_hour * (with_race_['with_race'] + (cash * 0.01)), 0)} `50%~ {round((cash_ / 2), 0)}`"
         except Exception:
             pass
 
         try:
             embed = discord.Embed(
                 title=f"{fs.Mayus(fish.name)} (${int(round(fish.price() * ((race_json[race] if race != 1 else 1) + cash)))}) ({fish.weight}Kg)",
-                description=f"{RoePerHour}\n{KgPerHour}\n{(Race if race != 1 else '')}{Cash if cash != 0.0 else ''}"
+                description=f"{RoePerHour}\n{KgPerHour}\n{'\n'.join([x for x in [Race, Cash] if x is not None])}"
                 if fish.production(rsl=int(rsl)) is not None
                 else "-# Can't do that",
                 color=discord.Color.yellow(),
