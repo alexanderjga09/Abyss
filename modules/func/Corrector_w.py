@@ -15,7 +15,7 @@ def corrects_weights(texto: str) -> str:
             "s": "5",
             "o": "0",
             "i": "1",
-            "l": ".",
+            "l": "1",
             "h": "1",
             "t": "1",
             "n": "1",

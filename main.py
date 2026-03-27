@@ -63,7 +63,19 @@ def main():
             default="None",
         ),
         dead: bool = False,
-        rsl: int = 0,
+        rsl=discord.Option(
+            int,
+            description="The rsl of the fish",
+            choices=[
+                discord.OptionChoice(name="VI", value="6"),
+                discord.OptionChoice(name="V", value="5"),
+                discord.OptionChoice(name="IV", value="4"),
+                discord.OptionChoice(name="III", value="3"),
+                discord.OptionChoice(name="II", value="2"),
+                discord.OptionChoice(name="I", value="1"),
+            ],
+            default=0,
+        ),
         race=discord.Option(
             str,
             description="Your race",
@@ -74,15 +86,16 @@ def main():
             default=1,
         ),
         cash: float = 0.0,
-        feed: int = discord.Option(
+        feed=discord.Option(
+            int,
             description="The feed the fish has",
             choices=[
-                discord.OptionChoice(name="Star Feed", value="8"),
-                discord.OptionChoice(name="Octupus Feed", value="6"),
-                discord.OptionChoice(name="Shrimp Feed", value="4"),
-                discord.OptionChoice(name="Worm Feed", value="3"),
-                discord.OptionChoice(name="Fish Feed", value="2"),
-                discord.OptionChoice(name="Algae Feed", value="1"),
+                discord.OptionChoice(name="🌟 Star Feed", value="8"),
+                discord.OptionChoice(name="🦑 Octupus Feed", value="6"),
+                discord.OptionChoice(name="🦐 Shrimp Feed", value="4"),
+                discord.OptionChoice(name="🪱 Worm Feed", value="3"),
+                discord.OptionChoice(name="🐟 Fish Feed", value="2"),
+                discord.OptionChoice(name="🌿 Algae Feed", value="1"),
             ],
             default=0,
         ),
@@ -98,7 +111,7 @@ def main():
         cash = round(cash if "," in str(cash) else (float(cash) * 0.1), 1)
 
         try:
-            roe_per_hour = fish.production(rsl=rsl, feed=int(feed))["roe_per_hour"]
+            roe_per_hour = fish.production(rsl=int(rsl), feed=int(feed))["roe_per_hour"]
 
             RoePerHour = (
                 f"**$/hr:** {roe_per_hour} `50%~ {round((roe_per_hour / 2), 0)}`"
@@ -106,12 +119,12 @@ def main():
                 else None
             )
             KgPerHour = (
-                f"**Kg/hr:** {(weight_ := fish.production(rsl=rsl, feed=int(feed))['weight_per_hour'])} `50%~ {round((weight_ / 2), 1)}`"
-                if fish.production(rsl=rsl, feed=int(feed)) is not None
+                f"**Kg/hr:** {(weight_ := fish.production(rsl=int(rsl), feed=int(feed))['weight_per_hour'])} `50%~ {round((weight_ / 2), 1)}`"
+                if fish.production(rsl=int(rsl), feed=int(feed)) is not None
                 else None
             )
 
-            with_race_ = fish.production(rsl=rsl, race=race, food=int(feed))
+            with_race_ = fish.production(rsl=int(rsl), race=race, food=int(feed))
             Race = (
                 f"\n**With Race:** {round(roe_ := roe_per_hour * with_race_['with_race'], 0)} `50%~ {round((roe_ / 2), 0)}`"
                 if with_race_ is not None
@@ -127,25 +140,25 @@ def main():
 
         try:
             embed = discord.Embed(
-                title=f"{fs.Mayus(fish.name)} (${fish.price()}) ({fish.weight}Kg)",
+                title=f"{fs.Mayus(fish.name)} (${int(round(fish.price() * ((race_json[race] if race != 1 else 1) + cash)))}) ({fish.weight}Kg)",
                 description=f"{RoePerHour}\n{KgPerHour}\n{(Race if race != 1 else '')}{Cash if cash != 0.0 else ''}"
-                if fish.production(rsl=rsl) is not None
+                if fish.production(rsl=int(rsl)) is not None
                 else "-# Can't do that",
                 color=discord.Color.yellow(),
             )
             embed.add_field(
                 name="Details:",
-                value=f"**Stars:** {((':star: ' * fish.stars) + f'`x{0.25 + (0.25 * fish.stars)}`') if not fish.dead else ':skull: `x0.2`'} | **Rarity:** {fish.rarity} `{fish.production(rsl=rsl)['cycle_time']}m`\n**Mutation:** {fish.mutation} `x{fish.production(rsl=rsl)['mutation']}`",
+                value=f"**Stars:** {((':star: ' * fish.stars) + f'`x{0.25 + (0.25 * fish.stars)}`') if not fish.dead else ':skull: `x0.2`'} | **Rarity:** {fish.rarity} `{fish.production(rsl=int(rsl))['cycle_time']}m`\n**Mutation:** {fish.mutation} `x{fish.production(rsl=int(rsl))['mutation']}`",
             )
 
             embed.set_thumbnail(
                 url=fish.thumbnail if not fish.thumbnail == "" else placeholder
             )
-            embed.set_image(url=fish.production(rsl=rsl, feed=int(feed))["chart"])
+            embed.set_image(url=fish.production(rsl=int(rsl), feed=int(feed))["chart"])
 
             RSL = (
-                f"Roe Speed Level: {roman.toRoman(rsl)}"
-                if roman.toRoman(rsl) != "N"
+                f"Roe Speed Level: {roman.toRoman(int(rsl))}"
+                if roman.toRoman(int(rsl)) != "N"
                 else ""
             )
             RACE = f"Race: {race}" if race != 1 else ""
@@ -165,7 +178,7 @@ def main():
             embed = discord.Embed(
                 title=f"{fs.Mayus(fish.name)} (${fish.price()}) ({fish.weight}Kg)",
                 description=""
-                if fish.production(rsl=rsl) is not None
+                if fish.production(rsl=int(rsl)) is not None
                 else "-# Can't do that"
                 if race is int
                 else f"**With Race:** ${int(round(fish.price() * (race_json[race] if race != 1 else 1), 0))}\n**With Cash:** ${int(round(fish.price() * ((race_json[race] if race != 1 else 1) + (cash * 0.01)), 0))}",
@@ -191,7 +204,19 @@ def main():
     async def fish_img(
         interaction: discord.Interaction,
         img: discord.Attachment,
-        rsl: int = 0,
+        rsl=discord.Option(
+            int,
+            description="The rsl of the fish",
+            choices=[
+                discord.OptionChoice(name="VI", value="6"),
+                discord.OptionChoice(name="V", value="5"),
+                discord.OptionChoice(name="IV", value="4"),
+                discord.OptionChoice(name="III", value="3"),
+                discord.OptionChoice(name="II", value="2"),
+                discord.OptionChoice(name="I", value="1"),
+            ],
+            default=0,
+        ),
         race=discord.Option(
             str,
             description="Your race",
@@ -202,15 +227,16 @@ def main():
             default=1,
         ),
         cash: float = 0.0,
-        feed: int = discord.Option(
+        feed=discord.Option(
+            int,
             description="The feed the fish has",
             choices=[
-                discord.OptionChoice(name="Star Feed", value="8"),
-                discord.OptionChoice(name="Octupus Feed", value="6"),
-                discord.OptionChoice(name="Shrimp Feed", value="4"),
-                discord.OptionChoice(name="Worm Feed", value="3"),
-                discord.OptionChoice(name="Fish Feed", value="2"),
-                discord.OptionChoice(name="Algae Feed", value="1"),
+                discord.OptionChoice(name="🌟 Star Feed", value="8"),
+                discord.OptionChoice(name="🦑 Octupus Feed", value="6"),
+                discord.OptionChoice(name="🦐 Shrimp Feed", value="4"),
+                discord.OptionChoice(name="🪱 Worm Feed", value="3"),
+                discord.OptionChoice(name="🐟 Fish Feed", value="2"),
+                discord.OptionChoice(name="🌿 Algae Feed", value="1"),
             ],
             default=0,
         ),
@@ -232,7 +258,7 @@ def main():
         cash = round(cash if "," in str(cash) else (float(cash) * 0.1), 1)
 
         try:
-            roe_per_hour = fish.production(rsl=rsl, feed=int(feed))["roe_per_hour"]
+            roe_per_hour = fish.production(rsl=int(rsl), feed=int(feed))["roe_per_hour"]
 
             RoePerHour = (
                 f"**$/hr:** {roe_per_hour} `50%~ {round((roe_per_hour / 2), 0)}`"
@@ -240,12 +266,12 @@ def main():
                 else None
             )
             KgPerHour = (
-                f"**Kg/hr:** {(weight_ := fish.production(rsl=rsl, feed=int(feed))['weight_per_hour'])} `50%~ {round((weight_ / 2), 1)}`"
-                if fish.production(rsl=rsl, feed=int(feed)) is not None
+                f"**Kg/hr:** {(weight_ := fish.production(rsl=int(rsl), feed=int(feed))['weight_per_hour'])} `50%~ {round((weight_ / 2), 1)}`"
+                if fish.production(rsl=int(rsl), feed=int(feed)) is not None
                 else None
             )
 
-            with_race_ = fish.production(rsl=rsl, race=race, feed=int(feed))
+            with_race_ = fish.production(rsl=int(rsl), race=race, feed=int(feed))
 
             Race = (
                 f"\n**With Race:** ${round(roe_ := roe_per_hour * with_race_['with_race'], 0)} `50%~ {round((roe_ / 2), 0)}`"
@@ -262,25 +288,25 @@ def main():
 
         try:
             embed = discord.Embed(
-                title=f"{fs.Mayus(fish.name)} (${fish.price()}) ({fish.weight}Kg)",
+                title=f"{fs.Mayus(fish.name)} (${int(round(fish.price() * ((race_json[race] if race != 1 else 1) + cash)))}) ({fish.weight}Kg)",
                 description=f"{RoePerHour}\n{KgPerHour}\n{(Race if race != 1 else '')}{Cash if cash != 0.0 else ''}"
-                if fish.production(rsl=rsl) is not None
+                if fish.production(rsl=int(rsl)) is not None
                 else "-# Can't do that",
                 color=discord.Color.yellow(),
             )
             embed.add_field(
                 name="Details:",
-                value=f"**Stars:** {((':star: ' * fish.stars) + f'`x{0.25 + (0.25 * fish.stars)}`') if not fish.dead else ':skull: `x0.2`'} | **Rarity:** {fish.rarity} `{fish.production(rsl=rsl)['cycle_time']}m`\n**Mutation:** {fish.mutation} `x{fish.production(rsl=rsl)['mutation']}`",
+                value=f"**Stars:** {((':star: ' * fish.stars) + f'`x{0.25 + (0.25 * fish.stars)}`') if not fish.dead else ':skull: `x0.2`'} | **Rarity:** {fish.rarity} `{fish.production(rsl=int(rsl))['cycle_time']}m`\n**Mutation:** {fish.mutation} `x{fish.production(rsl=int(rsl))['mutation']}`",
             )
 
             embed.set_thumbnail(
                 url=fish.thumbnail if not fish.thumbnail == "" else placeholder
             )
-            embed.set_image(url=fish.production(rsl=rsl, feed=int(feed))["chart"])
+            embed.set_image(url=fish.production(rsl=int(rsl), feed=int(feed))["chart"])
 
             RSL = (
-                f"Roe Speed Level: {roman.toRoman(rsl)}"
-                if roman.toRoman(rsl) != "N"
+                f"Roe Speed Level: {roman.toRoman(int(rsl))}"
+                if roman.toRoman(int(rsl)) != "N"
                 else ""
             )
             RACE = f"Race: {race}" if race != 1 else ""
@@ -300,7 +326,7 @@ def main():
             embed = discord.Embed(
                 title=f"{fs.Mayus(fish.name)} (${fish.price()}) ({fish.weight}Kg)",
                 description=""
-                if fish.production(rsl=rsl) is not None
+                if fish.production(rsl=int(rsl)) is not None
                 else "-# Can't do that"
                 if race is int
                 else f"**With Race:** ${int(round(fish.price() * (race_json[race] if race != 1 else 1), 0))}\n**With Cash:** ${int(round(fish.price() * ((race_json[race] if race != 1 else 1) + (cash * 0.01)), 0))}",
