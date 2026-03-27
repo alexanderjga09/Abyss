@@ -2,6 +2,15 @@ import difflib
 import re
 
 
+def cut_(txt: str):
+    return re.sub(
+        (r"\b(Common|Uncommon|Rare|Epic|Legendary|Mythical)\b.*?(\d+(?:\.\d+)?\s?kg)"),
+        r"\1 \2",
+        txt,
+        flags=re.IGNORECASE,
+    )
+
+
 class Text:
     def __init__(self, text: str):
         self.text = text
@@ -21,13 +30,3 @@ class Text:
                 else:
                     corrected.append(word)
         return " ".join(corrected)
-
-    def cut_(self, txt: str):
-        return re.sub(
-            (
-                r"\b(Common|Uncommon|Rare|Epic|Legendary|Mythical)\b.*?(\d+(?:\.\d+)?\s?kg)"
-            ),
-            r"\1 \2",
-            txt,
-            flags=re.IGNORECASE,
-        )

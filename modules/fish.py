@@ -131,10 +131,6 @@ class Fish:
 
             return {
                 "price_roe": round(price, 0),
-                "cycle_time": int(
-                    cycle_time[fishes["fishes"][self.name]["rarity"]] / 60
-                ),
-                "mutation": (mutations[self.mutation]) if self.mutation != "" else 1.0,
                 "roe_per_hour": round(pr_hour, 0),
                 "roe_per_day": round(pr_hour * 24, 0),
                 "weight_roe": round(weight, 2),

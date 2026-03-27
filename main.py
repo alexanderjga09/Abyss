@@ -21,17 +21,18 @@ intents = discord.Intents.all()
 client = Client(intents=intents)
 
 placeholder: str = "https://static.wikitide.net/deepspiritwiki/thumb/4/47/Placeholder.png/250px-Placeholder.png"
+footer_url: str = "https://static.wikitide.net/deepspiritwiki/thumb/f/f1/Virelia.png/400px-Virelia.png"
 
 
 def main():
     with open("data/prices.json") as f:
-        prices = json.load(f)
+        prices: dict[str, dict[str, float]] = json.load(f)
 
     with open("data/mutations.json") as f:
-        mutations = json.load(f)
+        mutations: dict[str, float] = json.load(f)
 
     with open("data/race.json") as f:
-        race_json = json.load(f)
+        race_json: dict[str, float] = json.load(f)
 
     async def get_fish_names(ctx: discord.AutocompleteContext):
         all_fishes = prices["fishes"].keys()
@@ -118,7 +119,9 @@ def main():
         Cash = None
 
         try:
-            roe_per_hour = fish.production(rsl=int(rsl), feed=int(feed))["roe_per_hour"]
+            roe_per_hour: float = fish.production(rsl=int(rsl), feed=int(feed))[
+                "roe_per_hour"
+            ]
 
             RoePerHour = (
                 f"**$/hr:** {roe_per_hour} `50%~ {round((roe_per_hour / 2), 0)}`"
@@ -127,23 +130,40 @@ def main():
 
             with_race_ = fish.production(rsl=int(rsl), race=race, food=int(feed))
 
-            Race = f"\n**With Race:** {round(roe_ := roe_per_hour * with_race_['with_race'], 0)} `50%~ {round((roe_ / 2), 0)}`"
-            Cash = f"\n**With Cash:** {round(cash_ := roe_per_hour * (with_race_['with_race'] + (cash * 0.01)), 0)} `50%~ {round((cash_ / 2), 0)}`"
+            Race = f"**With Race:** {round(roe_ := roe_per_hour * with_race_['with_race'], 0)} `50%~ {round((roe_ / 2), 0)}`"
+            Cash = (
+                f"**With Cash:** {round(cash_ := roe_per_hour * (with_race_['with_race'] + (cash * 0.01)), 0)} `50%~ {round((cash_ / 2), 0)}`"
+                if cash
+                else None
+            )
 
         except Exception:
             pass
 
         try:
+            import json
+
+            with open("data/mutations.json") as f:
+                mutations_json: dict[str, int] = json.load(f)
+
             embed = discord.Embed(
                 title=f"{fs.Mayus(fish.name)} (${int(round(fish.price() * ((race_json[race] if race != 1 else 1) + cash)))}) ({fish.weight}Kg)",
-                description=f"{RoePerHour}\n{KgPerHour}\n{'\n'.join([x for x in [Race, Cash] if x is not None])}"
+                description=f"{RoePerHour}\n{KgPerHour}\n\n{'\n'.join([x for x in [Race, Cash] if x is not None])}"
                 if fish.production(rsl=int(rsl)) is not None
                 else "-# Can't do that",
                 color=discord.Color.yellow(),
             )
+            cycle_time: dict[str, int] = {
+                "Common": 60,
+                "Uncommon": 120,
+                "Rare": 240,
+                "Epic": 420,
+                "Legendary": 600,
+                "Mythical": 900,
+            }
             embed.add_field(
                 name="Details:",
-                value=f"**Stars:** {((':star: ' * fish.stars) + f'`x{0.25 + (0.25 * fish.stars)}`') if not fish.dead else ':skull: `x0.2`'} | **Rarity:** {fish.rarity} `{fish.production(rsl=int(rsl))['cycle_time']}m`\n**Mutation:** {fish.mutation} `x{fish.production(rsl=int(rsl))['mutation']}`",
+                value=f"**Stars:** {((':star: ' * fish.stars) + f'`x{0.25 + (0.25 * fish.stars)}`') if not fish.dead else ':skull: `x0.2`'} | **Rarity:** {fish.rarity} `{int(cycle_time.get(fish.rarity) / 60)}m`\n**Mutation:** {fish.mutation} `x{mutations_json.get(fish.mutation)}`",
             )
 
             embed.set_thumbnail(
@@ -160,7 +180,10 @@ def main():
             CASH = f"Cash: {str(cash) + '%'}" if cash != 0.0 else ""
             FOOD = f"Feed: +{5 * int(feed)}%" if feed != 0 else ""
             footer = " | ".join([x for x in [RSL, RACE, CASH, FOOD] if x != ""])
-            embed.set_footer(text=footer)
+            embed.set_footer(
+                text=footer,
+                icon_url=footer_url,
+            )
 
             await interaction.followup.send(embed=embed)
 
@@ -168,15 +191,11 @@ def main():
             import json
 
             with open("data/mutations.json") as f:
-                mutations = json.load(f)
+                mutations: dict[str, float] = json.load(f)
 
             embed = discord.Embed(
                 title=f"{fs.Mayus(fish.name)} (${fish.price()}) ({fish.weight}Kg)",
-                description=""
-                if fish.production(rsl=int(rsl)) is not None
-                else "-# Can't do that"
-                if race is int
-                else f"**With Race:** ${int(round(fish.price() * (race_json[race] if race != 1 else 1), 0))}\n**With Cash:** ${int(round(fish.price() * ((race_json[race] if race != 1 else 1) + (cash * 0.01)), 0))}",
+                description=f"**With Race:** ${int(round(fish.price() * (race_json[race] if race != 1 else 1), 0))}\n**With Cash:** ${int(round(fish.price() * ((race_json[race] if race != 1 else 1) + (cash * 0.01)), 0))}",
                 color=discord.Color.yellow(),
             )
             embed.add_field(
@@ -191,9 +210,12 @@ def main():
             RACE = f"Race: {race}" if race != 1 else ""
             CASH = f"Cash: {str(cash) + '%'}" if cash != 0.0 else ""
             footer = " | ".join([x for x in [RACE, CASH] if x != ""])
-            embed.set_footer(text=footer)
+            embed.set_footer(
+                text=footer,
+                icon_url=footer_url,
+            )
 
-            await interaction.response.send_message(embed=embed)
+            await interaction.followup.send(embed=embed)
 
     @client.slash_command(name="fish-img", description="placeholder")
     async def fish_img(
@@ -239,7 +261,7 @@ def main():
         await interaction.response.defer()
 
         img_bytes = await img.read()
-        fish_instance = fsi.FishImage(img_bytes, rsl)
+        fish_instance = fsi.FishImage(img_bytes)
         resultado = fish_instance.get_fish()
 
         fish = fs.Fish(
@@ -258,7 +280,9 @@ def main():
         Cash = None
 
         try:
-            roe_per_hour = fish.production(rsl=int(rsl), feed=int(feed))["roe_per_hour"]
+            roe_per_hour: float = fish.production(rsl=int(rsl), feed=int(feed))[
+                "roe_per_hour"
+            ]
 
             RoePerHour = (
                 f"**$/hr:** {roe_per_hour} `50%~ {round((roe_per_hour / 2), 0)}`"
@@ -267,22 +291,39 @@ def main():
 
             with_race_ = fish.production(rsl=int(rsl), race=race, feed=int(feed))
 
-            Race = f"\n**With Race:** ${round(roe_ := roe_per_hour * with_race_['with_race'], 0)} `50%~ {round((roe_ / 2), 0)}`"
-            Cash = f"\n**With Cash:** ${round(cash_ := roe_per_hour * (with_race_['with_race'] + (cash * 0.01)), 0)} `50%~ {round((cash_ / 2), 0)}`"
+            Race = f"**With Race:** ${round(roe_ := roe_per_hour * with_race_['with_race'], 0)} `50%~ {round((roe_ / 2), 0)}`"
+            Cash = (
+                f"**With Cash:** ${round(cash_ := roe_per_hour * (with_race_['with_race'] + (cash * 0.01)), 0)} `50%~ {round((cash_ / 2), 0)}`"
+                if cash
+                else None
+            )
         except Exception:
             pass
 
         try:
+            import json
+
+            with open("data/mutations.json") as f:
+                mutations_json: dict[str, int] = json.load(f)
+
             embed = discord.Embed(
                 title=f"{fs.Mayus(fish.name)} (${int(round(fish.price() * ((race_json[race] if race != 1 else 1) + cash)))}) ({fish.weight}Kg)",
-                description=f"{RoePerHour}\n{KgPerHour}\n{'\n'.join([x for x in [Race, Cash] if x is not None])}"
+                description=f"{RoePerHour}\n{KgPerHour}\n\n{'\n'.join([x for x in [Race, Cash] if x is not None])}"
                 if fish.production(rsl=int(rsl)) is not None
                 else "-# Can't do that",
                 color=discord.Color.yellow(),
             )
+            cycle_time: dict[str, int] = {
+                "Common": 60,
+                "Uncommon": 120,
+                "Rare": 240,
+                "Epic": 420,
+                "Legendary": 600,
+                "Mythical": 900,
+            }
             embed.add_field(
                 name="Details:",
-                value=f"**Stars:** {((':star: ' * fish.stars) + f'`x{0.25 + (0.25 * fish.stars)}`') if not fish.dead else ':skull: `x0.2`'} | **Rarity:** {fish.rarity} `{fish.production(rsl=int(rsl))['cycle_time']}m`\n**Mutation:** {fish.mutation} `x{fish.production(rsl=int(rsl))['mutation']}`",
+                value=f"**Stars:** {((':star: ' * fish.stars) + f'`x{0.25 + (0.25 * fish.stars)}`') if not fish.dead else ':skull: `x0.2`'} | **Rarity:** {fish.rarity} `{int(cycle_time.get(fish.rarity) / 60)}m`\n**Mutation:** {fish.mutation} `x{mutations_json.get(fish.mutation)}`",
             )
 
             embed.set_thumbnail(
@@ -299,7 +340,10 @@ def main():
             CASH = f"Cash: {str(cash) + '%'}" if cash != 0.0 else ""
             FOOD = f"Feed: +{5 * int(feed)}%" if feed != 0 else ""
             footer = " | ".join([x for x in [RSL, RACE, CASH, FOOD] if x != ""])
-            embed.set_footer(text=footer)
+            embed.set_footer(
+                text=footer,
+                icon_url=footer_url,
+            )
 
             await interaction.followup.send(embed=embed)
 
@@ -307,15 +351,11 @@ def main():
             import json
 
             with open("data/mutations.json") as f:
-                mutations = json.load(f)
+                mutations: dict[str, float] = json.load(f)
 
             embed = discord.Embed(
                 title=f"{fs.Mayus(fish.name)} (${fish.price()}) ({fish.weight}Kg)",
-                description=""
-                if fish.production(rsl=int(rsl)) is not None
-                else "-# Can't do that"
-                if race is int
-                else f"**With Race:** ${int(round(fish.price() * (race_json[race] if race != 1 else 1), 0))}\n**With Cash:** ${int(round(fish.price() * ((race_json[race] if race != 1 else 1) + (cash * 0.01)), 0))}",
+                description=f"**With Race:** ${int(round(fish.price() * (race_json[race] if race != 1 else 1), 0))}\n**With Cash:** ${int(round(fish.price() * ((race_json[race] if race != 1 else 1) + (cash * 0.01)), 0))}",
                 color=discord.Color.yellow(),
             )
             embed.add_field(
@@ -330,7 +370,10 @@ def main():
             RACE = f"Race: {race}" if race != 1 else ""
             CASH = f"Cash: {str(cash) + '%'}" if cash != 0.0 else ""
             footer = " | ".join([x for x in [RACE, CASH] if x != ""])
-            embed.set_footer(text=footer)
+            embed.set_footer(
+                text=footer,
+                icon_url=footer_url,
+            )
 
             await interaction.followup.send(embed=embed)
 

@@ -34,8 +34,6 @@ FISH_PATTERNS = [(re.compile(name), name) for name in FISHES.keys()]
 def extract(txt: str):
     data: dict = {"mutation": "None", "name": "None", "stars": "None", "weight": "None"}
 
-    print(txt)
-
     for pattern, name in MUTATION_PATTERNS:
         if pattern.search(txt):
             data["mutation"] = name
