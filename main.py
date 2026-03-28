@@ -130,7 +130,11 @@ def main():
 
             with_race_ = fish.production(rsl=int(rsl), race=race, food=int(feed))
 
-            Race = f"**With Race:** {round(roe_ := roe_per_hour * with_race_['with_race'], 0)} `50%~ {round((roe_ / 2), 0)}`"
+            Race = (
+                f"**With Race:** ${round(roe_ := roe_per_hour * with_race_['with_race'], 0)} `50%~ {round((roe_ / 2), 0)}`"
+                if race != 1
+                else None
+            )
             Cash = (
                 f"**With Cash:** {round(cash_ := roe_per_hour * (with_race_['with_race'] + (cash * 0.01)), 0)} `50%~ {round((cash_ / 2), 0)}`"
                 if cash
@@ -291,7 +295,11 @@ def main():
 
             with_race_ = fish.production(rsl=int(rsl), race=race, feed=int(feed))
 
-            Race = f"**With Race:** ${round(roe_ := roe_per_hour * with_race_['with_race'], 0)} `50%~ {round((roe_ / 2), 0)}`"
+            Race = (
+                f"**With Race:** ${round(roe_ := roe_per_hour * with_race_['with_race'], 0)} `50%~ {round((roe_ / 2), 0)}`"
+                if race != 1
+                else None
+            )
             Cash = (
                 f"**With Cash:** ${round(cash_ := roe_per_hour * (with_race_['with_race'] + (cash * 0.01)), 0)} `50%~ {round((cash_ / 2), 0)}`"
                 if cash

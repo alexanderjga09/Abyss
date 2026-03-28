@@ -11,4 +11,5 @@
   "reportArgumentType": "none",
   "reportCallIssue": "none",
   "reportOperatorIssue": "none",
+  "reportOptionalOperand": "none",
 }
